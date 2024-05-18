@@ -1,88 +1,19 @@
-import axios from "./axios.js"
+import postRequest from "@/vuex/request/postRequest.js";
+import getRequest from "@/vuex/request/getRequest.js";
 
 export default {
     actions: {
         pushUser(context, data) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .post('users', data)
-                    .then(response =>{
-                        console.log("Foydalanuvchi qo'shildi")
-
-                        let user = {
-                            "@id": response.data['@id'],
-                            id: response.data.id,
-                            email: response.data.email,
-                            roles: response.data.roles,
-                            createdAt: response.data.createdAt,
-                        }
-
-                        context.commit('updateUser', user)
-                        resolve()
-                    })
-                    .catch(() => {
-                        console.log("Foydalanuvchi qo'shishda xatolik yuz berdi")
-                        reject()
-                    })
-            })
+            return postRequest('users', data, 'updateUser', context)
         },
         fetchToken(context, data) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .post('users/auth', data)
-                    .then(response => {
-                        let tokens = {
-                            accessToken: response.data.accessToken,
-                            refreshToken: response.data.refreshToken,
-                        }
-
-                        context.commit('updateTokens', tokens)
-                        resolve()
-                    })
-                    .catch(() => {
-                        console.log("Token olishda xatolik!!!")
-                        reject()
-                    })
-            })
+            return postRequest('users/auth', data, 'updateTokens', context)
         },
         fetchUser(context, id) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .get('users/' + id)
-                    .then(response => {
-                        let user = {
-                            "@id": response.data['@id'],
-                            id: response.data.id,
-                            email: response.data.email,
-                            roles: response.data.roles,
-                            createdAt: response.data.createdAt,
-                        }
-
-                        context.commit('updateUser', user)
-                        resolve()
-                    })
-                    .catch(() => {
-                        reject()
-                    })
-            })
+            return getRequest('users/' + id, 'updateUser', context)
         },
         fetchUsers(context) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .get('users')
-                    .then(response => {
-                        let users ={
-                            models: response.data['hydra:member'],
-                            totalItems: response.data['hydra:totalItems'],
-                        }
-
-                        context.commit('updateUsers', users)
-                        resolve()
-                    })
-                    .catch(() => {
-                        reject()
-                    })
-            })
+            return getRequest('users', 'updateUsers', context)
         },
     },
     mutations: {
@@ -102,7 +33,7 @@ export default {
     },
     state: {
         accessToken: localStorage.getItem('accessToken'),
-        refreshToken: localStorage.getItem('refresh'),
+        refreshToken: localStorage.getItem('refreshToken'),
 
         user: {
             "@id": null,
