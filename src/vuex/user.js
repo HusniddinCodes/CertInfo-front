@@ -12,8 +12,8 @@ export default {
         fetchUser(context, id) {
             return getRequest('users/' + id, 'updateUser', context)
         },
-        fetchUsers(context) {
-            return getRequest('users', 'updateUsers', context)
+        fetchUsers(context, data) {
+            return getRequest('users', data, 'updateUsers', context)
         },
     },
     mutations: {
