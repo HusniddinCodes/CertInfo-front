@@ -1,71 +1,16 @@
-import axios from "./axios.js"
+import postRequests from "@/vuex/requests/postRequests.js";
+import getRequests from "@/vuex/requests/getRequests.js";
 
 export default {
     actions: {
         pushCourse(context, data) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .post('courses', data)
-                    .then(response => {
-                        console.log("Course qo'shildi")
-
-                        let course = {
-                            "@id": response.data['@id'],
-                            id: response.data.id,
-                            givenName: response.data.name,
-                            familyName: response.data.description,
-                            createdAt: response.data.createdAt,
-                        }
-
-                        context.commit('updateCourse', course)
-                        resolve()
-                    })
-                    .catch(() => {
-                        console.log("Course qo'shishda xatolik yuz berdi")
-                        reject()
-                    })
-            })
+            return postRequests('/courses', data, 'updateCourse', context)
         },
         fetchCourse(context, id) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .get('courses/' + id)
-                    .then(response => {
-
-                        let course = {
-                            "@id": response.data['@id'],
-                            id: response.data.id,
-                            givenName: response.data.name,
-                            familyName: response.data.description,
-                            createdAt: response.data.createdAt,
-                        }
-
-                        context.commit('updateCourse', course)
-                        resolve()
-                    })
-                    .catch(() => {
-                        reject()
-                    })
-            })
+            return getRequests('/courses/' +id, 'updateCourse', context)
         },
         fetchCourses(context) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .get('courses')
-                    .then(response => {
-
-                        let courses = {
-                            models: response.data['hydra:member'],
-                            totalItems: response.data['hydra:totalItems'],
-                        }
-
-                        context.commit('updateCourses', courses)
-                        resolve()
-                    })
-                    .catch(() => {
-                        reject()
-                    })
-            })
+            return getRequests('/courses','updateCourses', context)
         },
     },
     mutations: {
