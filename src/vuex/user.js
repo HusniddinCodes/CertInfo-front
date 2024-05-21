@@ -1,19 +1,19 @@
-import postRequest from "@/vuex/request/postRequest.js";
-import getRequest from "@/vuex/request/getRequest.js";
+import postRequests from "@/vuex/requests/postRequests.js";
+import getRequests from "@/vuex/requests/getRequests.js";
 
 export default {
     actions: {
         pushUser(context, data) {
-            return postRequest('users', data, 'updateUser', context)
+            return postRequests('/users', data, 'updateUser', context)
         },
         fetchToken(context, data) {
-            return postRequest('users/auth', data, 'updateTokens', context)
+            return postRequests('/users/auth', data, 'updateTokens', context)
         },
         fetchUser(context, id) {
-            return getRequest('users/' + id, 'updateUser', context)
+            return getRequests('/users/' + id, 'updateUser', context)
         },
         fetchUsers(context, data) {
-            return getRequest('users', data, 'updateUsers', context)
+            return getRequests('/users', data, 'updateUsers', context)
         },
     },
     mutations: {
