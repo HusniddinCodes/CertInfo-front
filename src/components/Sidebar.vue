@@ -14,7 +14,7 @@ import LogoComponent from "@/components/LogoComponent.vue";
             </div>
             <div class="menu">
                 <img class="icon" alt="" src="@/assets/images/Icon%20(1).svg">
-                <router-link to="#">Sertifikarlashtirish</router-link>
+                <router-link to="#">Sertifikatlashtirish</router-link>
             </div>
             <div class="menu">
                 <img class="icon" alt="" src="@/assets/images/Icon%20(2).svg">
