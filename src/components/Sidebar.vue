@@ -10,7 +10,7 @@ import LogoComponent from "@/components/LogoComponent.vue";
             </div>
             <div class="menu">
                 <img class="icon" alt="" src="@/assets/images/home.svg">
-                <router-link class="home" to="#">Asosiy</router-link>
+                <router-link to="#">Asosiy</router-link>
             </div>
             <div class="menu">
                 <img class="icon" alt="" src="../assets/images/papers.svg">
