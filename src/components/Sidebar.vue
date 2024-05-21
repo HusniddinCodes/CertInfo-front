@@ -9,15 +9,15 @@ import LogoComponent from "@/components/LogoComponent.vue";
                 <LogoComponent />
             </div>
             <div class="menu">
-                <img class="icon" alt="" src="@/assets/images/Icon.svg">
+                <img class="icon" alt="" src="@/assets/images/home.svg">
                 <router-link class="home" to="#">Asosiy</router-link>
             </div>
             <div class="menu">
-                <img class="icon" alt="" src="@/assets/images/Icon%20(1).svg">
+                <img class="icon" alt="" src="@/assets/images/Papers.svg">
                 <router-link to="#">Sertifikatlashtirish</router-link>
             </div>
             <div class="menu">
-                <img class="icon" alt="" src="@/assets/images/Icon%20(2).svg">
+                <img class="icon" alt="" src="@/assets/images/settings.svg">
                 <router-link to="#">Sozlamalar</router-link>
             </div>
         </div>
