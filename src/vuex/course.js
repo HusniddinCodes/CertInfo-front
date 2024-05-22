@@ -1,16 +1,16 @@
-import postRequests from "@/vuex/requests/postRequests.js";
-import getRequests from "@/vuex/requests/getRequests.js";
+import postRequest from "@/vuex/request/postRequest.js";
+import getRequest from "@/vuex/request/getRequest.js";
 
 export default {
     actions: {
         pushCourse(context, data) {
-            return postRequests('/courses', data, 'updateCourse', context)
+            return postRequest('/courses', data, 'updateCourse', context)
         },
         fetchCourse(context, id) {
-            return getRequests('/courses/' +id, 'updateCourse', context)
+            return getRequest('/courses/' +id, 'updateCourse', context)
         },
         fetchCourses(context) {
-            return getRequests('/courses','updateCourses', context)
+            return getRequest('/courses','updateCourses', context)
         },
     },
     mutations: {

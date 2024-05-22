@@ -1,17 +1,17 @@
-import postRequests from "@/vuex/requests/postRequests.js";
-import getRequests from "@/vuex/requests/getRequests.js";
+import postRequest from "@/vuex/request/postRequest.js";
+import getRequest from "@/vuex/request/getRequest.js";
 
 export default {
     actions: {
         pushPerson(context,data) {
-            return postRequests('/persons',data, 'updatePerson', context)
+            return postRequest('/persons',data, 'updatePerson', context)
         },
 
         fetchPerson(context, id) {
-            return getRequests("/persons" + id,'updatePerson',context)
+            return getRequest("/persons" + id,'updatePerson',context)
         },
         fetchPersons(context) {
-            return getRequests('/persons','updatePersons', context)
+            return getRequest('/persons','updatePersons', context)
         },
 
     },
