@@ -1,22 +1,22 @@
-import postRequests from "@/vuex/requests/postRequests.js";
-import getRequests from "@/vuex/requests/getRequests.js";
+import postRequest from "@/vuex/request/postRequest.js";
+import getRequest from "@/vuex/request/getRequest.js";
 
 export default {
     actions: {
         pushCertificate(context, data) {
-            return postRequests('/certificates', data, 'updateCertificate', context)
+            return postRequest('/certificates', data, 'updateCertificate', context)
         },
 
         fetchCertificate(context, id) {
-            return getRequests('/certificates/' + id, 'updateCertificate', context)
+            return getRequest('/certificates/' + id, 'updateCertificate', context)
         },
 
         fetchCertificateByQrCode(context, id) {
-            return getRequests('/certificates/' + id, 'updateCertificateByQrCode', context)
+            return getRequest('/certificates/' + id, 'updateCertificateByQrCode', context)
         },
 
         fetchCertificates(context) {
-            return getRequests('/certificates', 'updateCertificates', context)
+            return getRequest('/certificates', 'updateCertificates', context)
         }
     },
     mutations: {
