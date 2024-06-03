@@ -10,6 +10,5 @@ export default createStore({
         course,
         user,
         person
-        
     }
 })

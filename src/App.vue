@@ -1,13 +1,11 @@
-<script setup>
-import Sidebar from "@/components/Sidebar.vue";
-import Pagination from "@/components/Pagination.vue";
-import CoursePage from "@/components/CoursePage.vue";
+<script>
+export default {
+    name: "App"
+}
 </script>
 
 <template>
-  <Sidebar/>
-  <Pagination/>
-  <CoursePage/>
+    <RouterView/>
 </template>
 
 <style scoped>
