@@ -13,7 +13,7 @@ import LogoComponent from "@/components/LogoComponent.vue";
                 <router-link to="#">Asosiy</router-link>
             </div>
             <div class="menu">
-                <img class="icon" alt="" src="@/assets/images/Untitled.svg">
+                <img class="icon" alt="" src="../assets/images/award.svg">
                 <router-link to="/createCertificate">Sertifikatlashtirish</router-link>
             </div>
             <div class="menu">

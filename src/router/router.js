@@ -7,7 +7,7 @@ const routes = [
   },
   {
     path:'/create-course',
-    component: () => import('@/pages/CoursePage.vue')
+    component: () => import('@/pages/CourseCreatePage.vue')
   },
 ]
 
