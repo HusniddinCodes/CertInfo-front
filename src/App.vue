@@ -1,15 +1,11 @@
 <script setup>
-import Sidebar from "@/components/Sidebar.vue";
-import Pagination from "@/components/Pagination.vue";
-import CoursePage from "@/components/CoursePage.vue";
-import LoginPage from "@/pages/LoginPage.vue";
+import LogoComponent from "@/components/LogoComponent.vue";
+import SignIn from "@/components/SignIn.vue";
 </script>
 
 <template>
-  <Sidebar/>
-  <Pagination/>
-  <CoursePage/>
-  <LoginPage />
+    <LogoComponent />
+    <SignIn />
 </template>
 
 <style scoped>
