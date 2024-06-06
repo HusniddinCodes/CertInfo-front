@@ -3,9 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path:'/createCertificate',
-    name:'createCertificate',
-    component:import('@/pages/createCertificatePage.vue')
-  }
+    component:import('@/pages/CreateCertificatePage.vue')
+  },
+  {
+    path:'/create-course',
+    component: () => import('@/pages/CourseCreatePage.vue')
+  },
 ]
 
 export default createRouter({
