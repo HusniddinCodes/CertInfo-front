@@ -1,12 +1,11 @@
-<script setup>
-import Sidebar from "@/components/Sidebar.vue";
+<script>
+export default {
+    name: "App"
+}
 </script>
 
 <template>
-<!--  <Sidebar/>-->
-  <!--  <Pagination/>-->
-  <!--  <CoursePage/>-->
-  <router-view/>
+    <RouterView/>
 </template>
 
 <style scoped>
