@@ -1,10 +1,14 @@
 <script>
+import CertificatesPage from "@/pages/CertificatesPage.vue";
+
 export default {
-    name: "App"
+    name: "App",
+    components: {CertificatesPage}
 }
 </script>
 
 <template>
+    <CertificatesPage />
     <RouterView/>
 </template>
 
