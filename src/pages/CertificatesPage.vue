@@ -1,11 +1,11 @@
 <script>
 import FilterComponent from "@/components/FilterComponent.vue";
 import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
-import Pagination from "@/components/Pagination.vue";
+import PaginationComponent from "@/components/PaginationComponent.vue";
 
 export default {
     name: "CertificatesPage",
-    components: {Pagination, CertificatedStudentsComponent, FilterComponent}
+    components: {PaginationComponent, CertificatedStudentsComponent, FilterComponent}
 }
 </script>
 
@@ -14,7 +14,7 @@ export default {
         <FilterComponent />
         <div class="p-0 rounded-3 border">
             <CertificatedStudentsComponent />
-            <Pagination />
+            <PaginationComponent />
         </div>
     </div>
 </template>
