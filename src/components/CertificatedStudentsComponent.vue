@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "StudentsList"
+    name: "CertificatedStudentsComponent"
 }
 </script>
 
