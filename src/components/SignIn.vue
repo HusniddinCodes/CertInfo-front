@@ -106,7 +106,7 @@ form button {
 .modal-header {
     border: none;
     height: 180px;
-    background-image: url(../assets/Pattern.svg);
+    background-image: url(../assets/pattern.svg);
     background-repeat: no-repeat;
 }
 
