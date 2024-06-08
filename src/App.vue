@@ -1,11 +1,22 @@
-<script setup>
-import LogoComponent from "@/components/LogoComponent.vue";
-import SignIn from "@/components/SignIn.vue";
+<<<<<<< src/App.vue
+<script>
+export default {
+    name: "App"
+}
 </script>
 
 <template>
-    <LogoComponent />
-    <SignIn />
+    <RouterView/>
+=======
+<script>
+export default {
+    name: "App"
+}
+</script>
+
+<template>
+    <RouterView/>
+>>>>>>> src/App.vue
 </template>
 
 <style scoped>
