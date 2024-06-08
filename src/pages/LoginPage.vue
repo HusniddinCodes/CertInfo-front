@@ -51,7 +51,7 @@ eyeicon.onclick = function () {
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <img src="./icon/Featured icon.svg" alt="Featured">
+                                <img src="./icon/featured-icon.svg" alt="Featured">
                                 <p>Paro'lingizni unutdingizmi?</p>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 </button>
@@ -118,7 +118,7 @@ a {
 .modal-header {
     border: none;
     height: 180px;
-    background-image: url(src/pages/icon/Backgroundpattern.svg);
+    background-image: url(src/pages/icon/background-pattern.svg);
     background-repeat: no-repeat;
 }
 
