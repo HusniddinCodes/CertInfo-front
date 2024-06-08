@@ -1,17 +1,16 @@
 <script>
 export default {
-  name: "Pagination"
+  name: "PaginationComponent"
 }
 </script>
 
 <template>
-  <div class="container">
+  <div class="container-fluid bg-white rounded-bottom-3">
     <div class="wrapper">
       <div class="d-flex justify-content-between align-content-center">
         <div class="prev-button">
           <a class="page-link opacity-50" href="#">
-            <img src="@/assets/images/arrow-left.svg"
-                 alt="">
+            <img src="@/assets/images/arrow-left.svg" alt="❮">
             <span class="d-none d-md-inline">
               Orqaga
             </span>
@@ -39,12 +38,10 @@ export default {
              <span class="d-none d-md-inline">
               Keyingisi
             </span>
-            <img
-              src="@/assets/images/arrow-right.svg"></a>
+            <img src="@/assets/images/arrow-right.svg" alt="❯"></a>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -80,7 +77,4 @@ export default {
 .page-link:last-child span{
   margin-right: 8px;
 }
-
-
-
 </style>
