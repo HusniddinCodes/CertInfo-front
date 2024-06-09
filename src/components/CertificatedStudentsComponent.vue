@@ -19,10 +19,10 @@ export default {
 			<label class="input-group border border-2 rounded-2">
 				<i id="basic-addon1" class="bi bi-search bg-white input-group-text border-0"></i>
 				<input
-					  aria-describedby="basic-addon1"
-					  class="form-control shadow-none border-0 ps-0"
-					  placeholder="Search"
-					  type="text"
+					aria-describedby="basic-addon1"
+					class="form-control shadow-none border-0 ps-0"
+					placeholder="Search"
+					type="text"
 				>
 			</label>
 		</div>

@@ -2,14 +2,15 @@
 import FilterComponent from "@/components/FilterComponent.vue";
 import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
 import PaginationComponent from "@/components/PaginationComponent.vue";
-import {mapActions, mapGetters} from "vuex";
+import {mapActions} from "vuex";
 
 export default {
 	name: "CertificatesPage",
 	components: {
 		PaginationComponent,
 		CertificatedStudentsComponent,
-		FilterComponent},
+		FilterComponent
+	},
 	
 	methods: {
 		...mapActions(['fetchCertificates'])
