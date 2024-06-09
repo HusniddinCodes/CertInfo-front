@@ -25,8 +25,10 @@ export default {
 	<div class="container-fluid">
 		<FilterComponent/>
 		<div class="p-0 rounded-3 border">
+			
 			<CertificatedStudentsComponent/>
 			<PaginationComponent/>
+		
 		</div>
 	</div>
 </template>
