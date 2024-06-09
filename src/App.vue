@@ -1,22 +1,13 @@
-<<<<<<< src/App.vue
 <script>
+import LoginPage from "@/pages/LoginPage.vue";
 export default {
-    name: "App"
+    name: "App",
+    components: {LoginPage}
 }
 </script>
 
 <template>
-    <RouterView/>
-=======
-<script>
-export default {
-    name: "App"
-}
-</script>
-
-<template>
-    <RouterView/>
->>>>>>> src/App.vue
+    <LoginPage />
 </template>
 
 <style scoped>
