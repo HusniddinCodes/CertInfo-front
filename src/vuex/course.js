@@ -28,10 +28,10 @@ export default {
     },
     mutations: {
         updateCourse(state, course) {
-            state.course = course;
+            state.course = course
         },
         updateCourses(state, courses) {
-            state.courses = courses;
+            state.courses = courses
         }
     },
     state: {
@@ -49,10 +49,10 @@ export default {
     },
     getters: {
         getCourse(state) {
-            return state.course;
+            return state.course
         },
         getCourses(state) {
-            return state.courses.models;
+            return state.courses.models
         }
     }
 };
