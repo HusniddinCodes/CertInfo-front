@@ -13,6 +13,7 @@ const courses = computed(() => store.getters['course/getCourses']);
 
 const onFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file && file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -34,6 +35,7 @@ const onFileChange = (event) => {
         };
         reader.readAsDataURL(file);
     }
+    
 };
 
 const triggerFileInput = () => {
