@@ -10,7 +10,6 @@ export default createStore({
         certificate,
         course,
         user,
-        person,
-        media_object
+        person
     }
 })
