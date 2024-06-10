@@ -1,10 +1,13 @@
 <script>
 import LogoComponent from "@/components/LogoComponent.vue";
-import SignIn from "@/components/SignInComponent.vue";
+import SignInComponent from "@/components/SignInComponent.vue";
 
 export default {
     name: "LoginPage",
-    components: {SignIn, LogoComponent}
+    components: {
+        SignInComponent,
+        LogoComponent
+    }
 }
 </script>
 
@@ -16,7 +19,7 @@ export default {
         </div>
     </nav>
 
-    <SignIn />
+    <SignInComponent />
 
 </template>
 
