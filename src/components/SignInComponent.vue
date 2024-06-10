@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "SignIn",
+    name: "SignInComponent",
     methods: {
         togglePasswordVisibility() {
             const password = document.getElementById("password");
