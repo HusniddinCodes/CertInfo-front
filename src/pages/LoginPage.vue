@@ -1,6 +1,6 @@
 <script>
 import LogoComponent from "@/components/LogoComponent.vue";
-import SignIn from "@/components/SignIn.vue";
+import SignIn from "@/components/SignInComponent.vue";
 
 export default {
     name: "LoginPage",
