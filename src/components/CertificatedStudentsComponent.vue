@@ -5,7 +5,7 @@ import {mapGetters} from "vuex";
 export default {
 	name: "CertificatedStudentsComponent",
 	computed: { 
-		...mapGetters(['getCertificates'])
+	 ...mapGetters(['getCertificates'])
 	},
 }
 </script>
