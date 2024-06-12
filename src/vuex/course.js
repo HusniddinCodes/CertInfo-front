@@ -1,17 +1,30 @@
 import postRequest from "@/vuex/request/postRequest.js";
 import getRequest from "@/vuex/request/getRequest.js";
+import axios from "@/vuex/axios.js"
 
 export default {
+    namespaced: true,
     actions: {
         pushCourse(context, data) {
-            return postRequest('/courses', data, 'updateCourse', context)
+            return postRequest('/courses', data, 'updateCourse', context);
         },
         fetchCourse(context, id) {
-            return getRequest('/courses/' +id, 'updateCourse', context)
+            return getRequest('/courses/' + id, 'updateCourse', context);
         },
         fetchCourses(context) {
-            return getRequest('/courses','updateCourses', context)
-        },
+            return new Promise((resolve, reject) => {
+                axios
+                    .get('/courses')
+                    .then((response) => {
+                        let courses = {
+                            models: response.data['hydra:member'],
+                            totalItems: response.data['hydra:totalItems']
+                        };
+                        context.commit('updateCourses', courses);
+                        resolve();
+                    })
+            });
+        }
     },
     mutations: {
         updateCourse(state, course) {
@@ -19,8 +32,7 @@ export default {
         },
         updateCourses(state, courses) {
             state.courses = courses
-        },
-
+        }
     },
     state: {
         course: {
@@ -28,9 +40,8 @@ export default {
             id: null,
             name: null,
             description: null,
-            createdAt: null,
+            createdAt: null
         },
-
         courses: {
             models: [],
             totalItems: 0
@@ -42,6 +53,6 @@ export default {
         },
         getCourses(state) {
             return state.courses.models
-        },
+        }
     }
-}
+};
