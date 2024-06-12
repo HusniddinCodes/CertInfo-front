@@ -81,7 +81,7 @@ export default {
 
 </template>
 
-<style>
+<style scoped>
 form button {
     background: #7F56D9;
 }
