@@ -27,9 +27,11 @@ export default {
     mutations: {
         updateCertificate(state, certificate) {
             state.certificate = certificate
-        }, updateCertificateByQrCode(state, certificateByQrCode) {
+        },
+        updateCertificateByQrCode(state, certificateByQrCode) {
             state.certificateByQrCode = certificateByQrCode
-        }, updateCertificates(state, certificates) {
+        },
+        updateCertificates(state, certificates) {
             state.certificates.models = certificates['hydra:member']
             state.certificates.totalItems = certificates['hydra:totalItems']
         }
@@ -38,16 +40,18 @@ export default {
 
         certificate: {
 
-            "@id": null,
-            id: null,
-            givenName: null,
-            familyName: null,
-            email: null,
-            avatar: null,
-            course: null,
-            practiceDescription: null,
-            certificateDefense: null,
-            createdAt: null,
+            certificate: {
+                "@id": null,
+                id: null,
+                givenName: null,
+                familyName: null,
+                email: null,
+                avatar: null,
+                course: null,
+                practiceDescription: null,
+                certificateDefense: null,
+                createdAt: null,
+            }
 
         },
         certificateByQrCode: {

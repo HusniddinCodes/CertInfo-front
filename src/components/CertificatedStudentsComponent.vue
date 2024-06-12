@@ -4,8 +4,8 @@ import {mapGetters} from "vuex";
 
 export default {
 	name: "CertificatedStudentsComponent",
-	computed: { 
-	 ...mapGetters(['getCertificates'])
+	computed: {
+		...mapGetters(['getCertificates'])
 	},
 }
 </script>
@@ -48,7 +48,7 @@ export default {
 			<div class="students-table-body">
 				<!--student info begins-->
 				<div v-for="certificate of getCertificates"
-				     :key="certificate.id" class="students-list row m-0 border-bottom"
+					 :key="certificate.id" class="students-list row m-0 border-bottom"
 				>
 					<div class="col-12 col-md-10 p-0">
 						<a class="row text-decoration-none m-0" href="#">
