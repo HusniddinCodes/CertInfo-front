@@ -98,7 +98,7 @@ export default {
 
 body {
     background-color: whitesmoke !important;
-    font-family: var(--Inter) !important;
+    font-family: var(--Inter),serif !important;
     font-weight: 400 !important;
     font-size: 14px !important;
 }
