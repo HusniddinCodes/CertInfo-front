@@ -151,10 +151,6 @@ a {
         overflow: hidden;
     }
 
-    .list-group {
-        align-items: center;
-    }
-
     .sidebar.active {
         height: 225px;
         transform: translateY(0);
