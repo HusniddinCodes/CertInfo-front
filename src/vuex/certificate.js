@@ -53,11 +53,13 @@ export default {
                 createdAt: null,
             }
 
-        }, certificateByQrCode: {
+        },
+        certificateByQrCode: {
 
             "@id": null, id: null, createdAt: null
 
-        }, certificates: {
+        },
+        certificates: {
 
             models: [], totalItems: 0
 

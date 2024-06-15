@@ -18,12 +18,8 @@ export default {
     <div class="col-12 col-md-5 col-lg-4 col-xl-3">
       <label class="input-group border border-2 rounded-2">
         <i id="basic-addon1" class="bi bi-search bg-white input-group-text border-0"></i>
-        <input
-            aria-describedby="basic-addon1"
-            class="form-control shadow-none border-0 ps-0"
-            placeholder="Search"
-            type="text"
-        >
+        <input aria-describedby="basic-addon1" class="form-control shadow-none border-0 ps-0" placeholder="Search"
+               type="text">
       </label>
     </div>
   </header>
@@ -47,8 +43,7 @@ export default {
       </div>
       <div class="students-table-body">
         <!--student info begins-->
-        <div v-for="certificate of getCertificates"
-             :key="certificate.id" class="students-list row m-0 border-bottom"
+        <div v-for="certificate of getCertificates" :key="certificate.id" class="students-list row m-0 border-bottom"
         >
           <div class="col-12 col-md-10 p-0">
             <a class="row text-decoration-none m-0" href="#">
