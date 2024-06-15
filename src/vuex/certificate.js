@@ -53,18 +53,13 @@ export default {
                 createdAt: null,
             }
 
-        },
-        certificateByQrCode: {
+        }, certificateByQrCode: {
 
-            "@id": null,
-            id: null,
-            createdAt: null
+            "@id": null, id: null, createdAt: null
 
-        },
-        certificates: {
+        }, certificates: {
 
-            models: [],
-            totalItems: 0
+            models: [], totalItems: 0
 
         }
     },
@@ -74,13 +69,11 @@ export default {
 
             return state.certificate
 
-        },
-        certificateByQrCode(state) {
+        }, certificateByQrCode(state) {
 
             return state.certificateByQrCode
 
-        },
-        getCertificates(state) {
+        }, getCertificates(state) {
 
             return state.certificates.models
 
