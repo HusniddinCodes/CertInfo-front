@@ -1,11 +1,11 @@
-import axios from "@/vuex/axios.js";
+import axios from "@/vuex/axios.js"
 
-export default function (url, mutationName, context) {
+export default function (url, id, mutationName, context) {
     return new Promise((resolve, reject) => {
         axios
-            .get(url)
+            .delete(url + id)
             .then(response => {
-                context.commit(mutationName, response.data)
+                context.commit(mutationName, response)
                 resolve()
             })
             .catch(() => {
