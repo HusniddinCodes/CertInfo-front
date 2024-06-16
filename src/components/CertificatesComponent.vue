@@ -3,14 +3,10 @@ import FilterComponent from "@/components/FilterComponent.vue";
 import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
 import PaginationComponent from "@/components/PaginationComponent.vue";
 import {mapActions} from "vuex";
-import SideBarSlot from "@/components/SideBarSlot.vue";
-import CertificatesComponent from "@/components/CertificatesComponent.vue";
 
 export default {
-    name: "CertificatesPage",
+    name: "CertificatesComponent",
     components: {
-        CertificatesComponent,
-        SideBarSlot,
         PaginationComponent,
         CertificatedStudentsComponent,
         FilterComponent
@@ -26,9 +22,15 @@ export default {
 </script>
 
 <template>
-    <SideBarSlot>
-        <CertificatesComponent/>
-    </SideBarSlot>
+    <div class="ms-lg-3 me-lg-3 mb-5 mt-4">
+        <FilterComponent/>
+        <div class="p-0 rounded-3 border">
+
+            <CertificatedStudentsComponent/>
+            <PaginationComponent/>
+
+        </div>
+    </div>
 </template>
 
 <style>
