@@ -61,13 +61,19 @@ export default {
         isAdmin: (state) => {
             try {
                 const token = state.accessToken
-                if (!token) return false
+
+                if (token === null) {
+                    return false
+                }
+
                 const base64Url = token.split('.')[1]
                 const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
                 const payload = JSON.parse(window.atob(base64))
+
                 return payload.roles && payload.roles.includes('ROLE_ADMIN')
             } catch (e) {
                 console.error('Error decoding token', e)
+
                 return false
             }
         }
