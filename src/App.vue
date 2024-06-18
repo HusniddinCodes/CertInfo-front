@@ -1,4 +1,5 @@
 <script>
+
 export default {
     name: "App",
 }
@@ -6,9 +7,7 @@ export default {
 </script>
 
 <template>
-
-    <RouterView/>
-
+    <RouterView />
 </template>
 
 <style scoped>

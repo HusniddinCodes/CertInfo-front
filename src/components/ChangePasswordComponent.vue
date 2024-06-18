@@ -1,50 +1,40 @@
 <script>
-import {mapActions, mapGetters} from "vuex";
-import SuccessAndErrorModal from "@/components/SuccessAndErrorModal.vue";
+import { mapGetters } from "vuex";
 import SuccessButton from "@/components/SuccessButton.vue";
 import CancelButton from "@/components/CancelButton.vue";
 
 export default {
-    name: "ChangePasswordMenu",
-    components: {CancelButton, SuccessButton, SuccessAndErrorModal},
+    name: "ChangePasswordComponent",
+    components: { CancelButton, SuccessButton },
     data() {
         return {
             form: {
                 oldPassword: '',
                 newPassword: '',
             },
-            newPassword1: '',
+            newPasswordRetry: '',
             showOldPassword: false,
-            showPassword: false,
-            showPassword1: false,
-            showMenu: false
+            showNewPassword: false,
+            showNewPasswordRetry: false,
+            showMenu: false,
         }
     },
     computed: {
-        ...mapGetters(['getUser', 'getResponse']),
+        ...mapGetters(['getUser']),
         isSubmitDisabled() {
             return this.form.oldPassword === '' ||
                 this.form.newPassword === '' ||
-                this.newPassword1 === '' ||
-                this.form.newPassword !== this.newPassword1 ||
+                this.newPasswordRetry === '' ||
+                this.form.newPassword !== this.newPasswordRetry ||
                 this.form.newPassword.length < 6;
         }
     },
     methods: {
-        ...mapActions(['changePassword']),
-        showPasswordTemporary(field) {
+        showNewPasswordTemporary(field) {
             this[field] = true;
         },
         hidePasswordTemporary(field) {
             this[field] = false;
-        },
-        submitChangePassword() {
-            this.changePassword({id: this.getUser.id, data: this.form});
-        },
-        redirectToHome() {
-            if (this.getResponse.status === 200) {
-                window.location.href = "/admin/certificates";
-            }
         },
         toggleMenu() {
             this.showMenu = !this.showMenu;
@@ -61,10 +51,10 @@ export default {
     >
         Parolni yangilash
     </button>
-    
+
     <div v-if="showMenu" class="">
         <div class="dropdown-content">
-            <form @submit.prevent="submitChangePassword">
+            <form>
                 <div class="mt-4">
                     <label for="oldPassword" class="form-label">Eski parol</label>
                     <div class="input-group">
@@ -73,8 +63,8 @@ export default {
                                v-model="form.oldPassword" placeholder="Parol">
                         <span class="input-group-text">
                             <button class="btn btn-link p-0" type="button"
-                                    @mousedown.prevent="showPasswordTemporary('showOldPassword')"
-                                    @touchstart.prevent="showPasswordTemporary('showOldPassword')"
+                                    @mousedown.prevent="showNewPasswordTemporary('showOldPassword')"
+                                    @touchstart.prevent="showNewPasswordTemporary('showOldPassword')"
                                     @mouseup.prevent="hidePasswordTemporary('showOldPassword')"
                                     @mouseleave.prevent="hidePasswordTemporary('showOldPassword')"
                                     @touchend.prevent="hidePasswordTemporary('showOldPassword')"
@@ -87,49 +77,48 @@ export default {
                 <div class="mt-4">
                     <label for="newPassword" class="form-label">Yangi parol</label>
                     <div class="input-group">
-                        <input :type="showPassword ? 'text' : 'password'"
+                        <input :type="showNewPassword ? 'text' : 'password'"
                                class="form-control" id="newPassword"
                                v-model="form.newPassword" placeholder="Yangi parol">
                         <span class="input-group-text">
                             <button class="btn btn-link p-0" type="button"
-                                    @mousedown.prevent="showPasswordTemporary('showPassword')"
-                                    @touchstart.prevent="showPasswordTemporary('showPassword')"
-                                    @mouseup.prevent="hidePasswordTemporary('showPassword')"
-                                    @mouseleave.prevent="hidePasswordTemporary('showPassword')"
-                                    @touchend.prevent="hidePasswordTemporary('showPassword')"
+                                    @mousedown.prevent="showNewPasswordTemporary('showNewPassword')"
+                                    @touchstart.prevent="showNewPasswordTemporary('showNewPassword')"
+                                    @mouseup.prevent="hidePasswordTemporary('showNewPassword')"
+                                    @mouseleave.prevent="hidePasswordTemporary('showNewPassword')"
+                                    @touchend.prevent="hidePasswordTemporary('showNewPassword')"
                             >
-                                <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                                <i :class="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                             </button>
                         </span>
                     </div>
                 </div>
                 <div class="mt-4">
-                    <label for="newPassword1" class="form-label">Yangi parolni takrorlang</label>
+                    <label for="newPasswordRetry" class="form-label">Yangi parolni takrorlang</label>
                     <div class="input-group">
-                        <input :type="showPassword1 ? 'text' : 'password'"
-                               class="form-control" id="newPassword1"
-                               v-model="newPassword1" placeholder="Yangi parol">
+                        <input :type="showNewPasswordRetry ? 'text' : 'password'"
+                               class="form-control" id="newPasswordRetry"
+                               v-model="newPasswordRetry" placeholder="Yangi parol">
                         <span class="input-group-text">
                             <button class="btn btn-link p-0" type="button"
-                                    @mousedown.prevent="showPasswordTemporary('showPassword1')"
-                                    @touchstart.prevent="showPasswordTemporary('showPassword1')"
-                                    @mouseup.prevent="hidePasswordTemporary('showPassword1')"
-                                    @mouseleave.prevent="hidePasswordTemporary('showPassword1')"
-                                    @touchend.prevent="hidePasswordTemporary('showPassword1')"
+                                    @mousedown.prevent="showNewPasswordTemporary('showNewPasswordRetry')"
+                                    @touchstart.prevent="showNewPasswordTemporary('showNewPasswordRetry')"
+                                    @mouseup.prevent="hidePasswordTemporary('showNewPasswordRetry')"
+                                    @mouseleave.prevent="hidePasswordTemporary('showNewPasswordRetry')"
+                                    @touchend.prevent="hidePasswordTemporary('showNewPasswordRetry')"
                             >
-                                <i :class="showPassword1 ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                                <i :class="showNewPasswordRetry ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                             </button>
                         </span>
                     </div>
                 </div>
                 <div class="dropdown-footer mt-4">
-                    <CancelButton :button-name="'Yopish'" :cancel-button="toggleMenu"/>
-                    <SuccessButton :disabled="isSubmitDisabled" :button-name="'Yangilash'"/>
+                    <CancelButton :button-name="'Yopish'" :cancel-button="toggleMenu" />
+                    <SuccessButton :disabled="isSubmitDisabled" :button-name="'Yangilash'" />
                 </div>
             </form>
         </div>
     </div>
-    <SuccessAndErrorModal :getResponse="getResponse" :redirectToURL="redirectToHome"/>
 </template>
 
 <style scoped>
@@ -139,7 +128,6 @@ export default {
     border-radius: 8px;
     border: 1px solid #D0D5DD;
 }
-
 .dropdown-footer {
     display: flex;
     justify-content: end;

@@ -10,12 +10,18 @@ export default {
         fetchCertificate(context, id) {
             return getRequest('/certificates/' + id, 'updateCertificate', context)
         },
-        fetchCertificateScanQr(context, id) {
-            return getRequest('/certificates/scan_qr/' + id, 'updateCertificate', context)
+
+        fetchCertificateByQrCode(context, id) {
+            return getRequest('/certificates/' + id, 'updateCertificateByQrCode', context)
         },
 
-        fetchCertificates(context) {
-            return getRequest('/certificates', 'updateCertificates', context)
+        fetchCertificates(context, data) {
+
+            if (data === undefined) {
+                data = null
+            }
+
+            return getRequest('/certificates/' + data, 'updateCertificates', context)
         }
     },
     mutations: {
@@ -26,40 +32,53 @@ export default {
             state.certificateByQrCode = certificateByQrCode
         },
         updateCertificates(state, certificates) {
-            state.certificates.models =certificates['hydra:member']
+            state.certificates.models = certificates['hydra:member']
             state.certificates.totalItems = certificates['hydra:totalItems']
         }
     },
     state: {
+
         certificate: {
+
             certificate: {
                 "@id": null,
                 id: null,
-                createdAt: null
+                givenName: null,
+                familyName: null,
+                email: null,
+                avatar: null,
+                course: null,
+                practiceDescription: null,
+                certificateDefense: null,
+                createdAt: null,
             }
+
         },
         certificateByQrCode: {
-            certificateByQrCode: {
-                "@id": null,
-                id: null,
-                createdAt: null
-            }
+
+            "@id": null, id: null, createdAt: null
+
         },
         certificates: {
-            models:[],
-            totalItems:0
+
+            models: [], totalItems: 0
 
         }
     },
+
     getters: {
         getCertificate(state) {
+
             return state.certificate
-        },
-        certificateByQrCode(state) {
+
+        }, certificateByQrCode(state) {
+
             return state.certificateByQrCode
-        },
-        getCertificates(state) {
+
+        }, getCertificates(state) {
+
             return state.certificates.models
+
         }
     }
 }
