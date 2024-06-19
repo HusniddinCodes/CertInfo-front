@@ -1,9 +1,5 @@
 <script>
-import FilterComponent from "@/components/FilterComponent.vue";
-import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
-import PaginationComponent from "@/components/PaginationComponent.vue";
-import {mapActions} from "vuex";
-import SideBarSlot from "@/components/SideBarSlot.vue";
+import SideBarSlot from "@/components/SideBarSlot.vue"
 import CertificatesComponent from "@/components/CertificatesComponent.vue";
 
 export default {
@@ -11,17 +7,7 @@ export default {
     components: {
         CertificatesComponent,
         SideBarSlot,
-        PaginationComponent,
-        CertificatedStudentsComponent,
-        FilterComponent
     },
-
-    methods: {
-        ...mapActions(['fetchCertificates'])
-    },
-    mounted() {
-        this.fetchCertificates('?page=1');
-    }
 }
 </script>
 
@@ -31,6 +17,6 @@ export default {
     </SideBarSlot>
 </template>
 
-<style>
+<style scoped>
 
 </style>
