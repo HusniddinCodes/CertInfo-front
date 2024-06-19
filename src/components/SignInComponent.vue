@@ -3,22 +3,21 @@ import {mapActions} from "vuex";
 
 export default {
     name: "SignInComponent",
+    data() {
+        return {
+            form: {
+                email: '',
+                password: '',
+            }
+        }
+    },
     methods: {
         
-        ...mapActions(['pushUser']),
+        ...mapActions(['fetchToken']),
         
         register() {
-            this.pushUser(this.form)
+            this.fetchToken(this.form)
         },
-        data() {
-            return {
-                form: {
-                    email: '',
-                    password: '',
-                }
-            }
-        },
-        
         togglePasswordVisibility() {
             const password = document.getElementById("password");
             
