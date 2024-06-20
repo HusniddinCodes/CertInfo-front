@@ -15,6 +15,12 @@ export default {
         fetchUsers(context, data) {
             return getRequest('/users', data, 'updateUsers', context)
         },
+        fetchRequestResetPassword(context, data) {
+            return postRequest('users/request_reset_password', data, 'updateUser', context)
+        },
+        fetchResetPassword(context, data) {
+            return postRequest('/users/reset-password', data, 'updateUser', context)
+        },
     },
     mutations: {
         updateUser(state, user) {
