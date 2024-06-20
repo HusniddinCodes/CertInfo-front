@@ -3,6 +3,10 @@ import store from "@/vuex/store.js"
 
 const routes = [
     {
+        path: '/admin/settings',
+        component: () => import('@/pages/SettingsPage.vue')
+    },
+    {
         path: '/admin/create-certificate',
         component: () => import('@/pages/CreateCertificatePage.vue')
     },

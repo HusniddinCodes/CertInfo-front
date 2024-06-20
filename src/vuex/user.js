@@ -1,5 +1,6 @@
-import postRequest from "@/vuex/request/postRequest.js";
-import getRequest from "@/vuex/request/getRequest.js";
+import postRequest from "@/vuex/request/postRequest.js"
+import getRequest from "@/vuex/request/getRequest.js"
+import putRequest from "@/vuex/request/putRequest.js"
 
 export default {
     actions: {
@@ -9,12 +10,16 @@ export default {
         fetchToken(context, data) {
             return postRequest('/users/auth', data, 'updateTokens', context)
         },
-        fetchUser(context, id) {
-            return getRequest('/users/' + id, 'updateUser', context)
+        fetchUser(context, data) {
+            return postRequest('/users/about_me', data, 'updateUser', context)
         },
         fetchUsers(context, data) {
             return getRequest('/users', data, 'updateUsers', context)
         },
+        changeUserData(context, {id, data}) {
+            return putRequest(`users/${id}`, data, 'updateUser', context)
+        },
+
     },
     mutations: {
         updateUser(state, user) {

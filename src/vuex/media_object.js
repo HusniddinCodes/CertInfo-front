@@ -1,22 +1,18 @@
-import axios from "@/vuex/axios.js";
+import axios from "@/vuex/axios.js"
 
 export default {
-    namespaced: true,
     actions: {
-        pushPicture(context, formData){
+        pushPicture(context, data){
             return new Promise((resolve, reject) => {
                 axios
-                    .post('/media_objects', formData, {
+                    .post('/media_objects', data, {
                         headers: {
                             'Content-Type': 'multipart/from-data'
                         }
                     })
                     .then((response) => {
-                        let picture = {
-                                avatar: response.data
-                        }
-                        context.commit('updatePicture', picture)
-                        resolve(picture)
+                        context.commit('updatePicture', response.data)
+                        resolve(response.data)
                     })
                     .catch(() => {
                         reject()
@@ -27,7 +23,7 @@ export default {
 
     mutations: {
         updatePicture(state, picture){
-            state.picture = picture;
+            state.picture = picture['@id']
         }
     },
     state: {
@@ -36,7 +32,7 @@ export default {
 
     getters: {
         getPicture(state) {
-            return state.picture;
+            return state.picture
         }
     }
 }
