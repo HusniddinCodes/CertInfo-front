@@ -1,53 +1,146 @@
 <script>
-import ChangePasswordComponent from "@/components/ChangePasswordComponent.vue";
-import SuccessButton from "@/components/SuccessButton.vue";
-import CancelButton from "@/components/CancelButton.vue";
+import ChangePasswordComponent from "@/components/ChangePasswordComponent.vue"
+import SuccessButton from "@/components/SuccessButton.vue"
+import CancelButton from "@/components/CancelButton.vue"
+import { mapActions, mapGetters } from "vuex"
 
 export default {
     name: "SettingsComponent",
-    components: {CancelButton, SuccessButton, ChangePasswordComponent}
+    components: {CancelButton, SuccessButton, ChangePasswordComponent},
+    data() {
+        return {
+            form: {
+                email: "",
+                familyName: "",
+                givenName: "",
+                avatar: "",
+            },
+            file: "",
+            avatarUrl: "",
+        }
+    },
+    computed: {
+        ...mapGetters(["getUser", "getPicture"]),
+
+    },
+    methods: {
+        ...mapActions(["fetchUser", "pushPicture", "changeUserData"]),
+        fillFormWithData() {
+            const userData = this.getUser
+            if (userData !== null) {
+                this.form.email = userData.email || ''
+                if (this.getUser.person) {
+                    this.form.familyName = userData.person.familyName || ''
+                    this.form.givenName = userData.person.givenName || ''
+                    this.form.avatar = userData?.person?.avatar ? userData.person.avatar['@id'] : ''
+                }
+            }
+        },
+        updateUserData() {
+            const formData = new FormData()
+            formData.append("file", this.file)
+            const userData = {
+                email: this.form.email,
+                familyName: this.form.familyName,
+                givenName: this.form.givenName,
+                avatar: this.form.avatar,
+            }
+            if (this.getUser.email !== userData.email) {
+                if (confirm("Elektron pochta manzilini almashtirishga aminmisiz ?")) {
+                    alert("Elektron pochta manzili o'zgartirildi!")
+                } else {
+                    userData.email = this.getUser.email
+                }
+            }
+
+            if (this.file) {
+                this.pushPicture(formData).then(() => {
+                    userData.avatar = this.getPicture
+                    return this.changeUserData({id: this.getUser.id, data: userData})
+                })
+            } else {
+                this.changeUserData({id: this.getUser.id, data: userData})
+            }
+        },
+        triggerFileInput() {
+            this.$refs.file.click()
+        },
+        handleDrop(event) {
+            const file = event.dataTransfer.files[0]
+            this.$refs.file.files = event.dataTransfer.files
+            this.handleFileUpload({target: {files: event.dataTransfer.files}})
+        },
+        handleFileUpload(event) {
+            this.file = event.target.files[0]
+            this.avatarUrl = URL.createObjectURL(this.file)
+        },
+        clearAvatar() {
+            this.file = ''
+            this.avatarUrl = ''
+        }
+    },
+    mounted() {
+        this.fetchUser({})
+    },
+    created() {
+        this.fillFormWithData()
+    },
+    watch: {
+        "$store.state.user": {
+            handler: function (newValue, oldValue) {
+                this.fillFormWithData()
+            },
+            deep: true,
+        },
+    },
 }
 </script>
 
 <template>
     <div class="px-3 py-3">
-        <div
-            class="mt-5 d-flex justify-content-start flex-column flex-md-row justify-content-md-between align-items-md-center">
-            <div class="d-block d-md-flex align-items-end">
-                <img class="avatar" src="@/assets/images/avatar.png" alt="avatar">
-                <img class="verification" src="@/assets/images/verified.svg" alt="verification">
-                <div class="mb-sm-3">
-                    <h2 class="full-name">Olivia Rhye</h2>
-                    <p class="nickname">@olivia</p>
+        <form @submit.prevent="updateUserData">
+            <div
+                class="mt-5 d-flex justify-content-start flex-column flex-md-row justify-content-md-between align-items-md-center">
+                <div class="d-block d-md-flex align-items-end">
+                    <img class="avatar"
+                         :src="getUser.person?.avatar?.filePath ? `${this.$apiBaseMediaUrl}${getUser.person.avatar.filePath}` : ''"
+                         alt="avatar">
+                    <img class="verification" src="@/assets/images/verified.svg" alt="verification">
+                    <div v-if="getUser.person" class="mb-sm-3">
+                        <h2 class="full-name">{{ getUser.person.familyName }} {{ getUser.person.givenName }}</h2>
+                        <p class="nickname">@{{ getUser.person.givenName }}</p>
+                    </div>
+                </div>
+                <div class=" pb-4 mt-1 mt-sm-4">
+                    <SuccessButton :button-name="'Saqlash'"/>
+                    <CancelButton :button-name="'Bekor qilish'"/>
                 </div>
             </div>
-            <div class=" pb-4 mt-1 mt-sm-4">
-                <SuccessButton :button-name="'Saqlash'"/>
-                <CancelButton :button-name="'Bekor qilish'"/>
-            </div>
 
-        </div>
+            <div class="row justify-content-center mt-5">
+                <div class="col-12 col-md-8 col-xxl-6">
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="mb-3">
+                                <label for="givenName" class="form-label">Ism</label>
+                                <input v-model="form.givenName" type="text" class="form-control" id="givenName"
+                                       aria-describedby="emailHelp"
+                                       placeholder="Ismingiz kiriting">
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Sharif</label>
+                                <input v-model="form.familyName" type="text" class="form-control" id="inputLastName"
+                                       placeholder="Familiyangizni kiriting">
+                            </div>
+                        </div>
+                        <div class="col-12">
 
-        <div class="row justify-content-center mt-5">
-            <div class="col-12 col-md-8 col-xxl-6">
-                <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Ism</label>
-                            <input type="email" class="form-control" id="inputName" aria-describedby="emailHelp"
-                                   placeholder="Ismingiz kiriting">
                         </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Sharif</label>
-                            <input type="text" class="form-control" id="inputLastName"
-                                   placeholder="Familiyangizni kiriting">
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <label for="exampleInputEmail1" class="form-label">Pochta</label>
-                        <div class="input-group mb-3">
+                        <div class="col-12">
+                            <label for="exampleInputEmail1" class="form-label">Pochta</label>
+                            <div class="input-group mb-3 email-radius">
                             <span class="input-group-text bg-white border border-end-0" id="basic-addon1">
                                 <svg width="20" height="16" viewBox="0 0 20 16" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -57,46 +150,69 @@ export default {
                                     stroke-linejoin="round"/>
                                 </svg>
                             </span>
-
-                            <input type="text" class="form-control border-start-0" id="email"
-                                   placeholder="olivia@untitledui.com" aria-label="Username"
-                                   aria-describedby="basic-addon1">
+                                <input
+                                    v-model="form.email"
+                                    type="text" class="form-control border-start-0"
+                                    id="email"
+                                    placeholder="olivia@untitledui.com"
+                                    aria-label="Username"
+                                    aria-describedby="basic-addon1"
+                                >
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row mt-4 justify-content-center">
-            <div class="col-12 col-md-8 col-xxl-6">
-                <div class="row">
-                    <div class="col-3 col-md-3 mx-lg-0 relative-container">
-                        <img class="avatarmini" src="@/assets/images/avatar.png" alt="">
-                    </div>
-                    <div class="col-9 col-md-9" id="click-to-upload">
-                        <img class="mx-auto d-block" src="@/assets/images/upload-img.svg" alt="">
-                        <p class="text-center mt-2 my-2" id="click" role="button">Click to upload
-                            <span>or drag and drop</span></p>
-                        <p class="text-center mt-0">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+            <div class="row mt-4 justify-content-center">
+                <div class="col-12 col-md-8 col-xxl-6">
+                    <div class="row">
+                        <div v-if="getUser.person" class="col-3 col-md-3 mx-lg-0 relative-container">
+                            <img class="avatar-mini"
+                                 :src="avatarUrl ? avatarUrl : (getUser?.person?.avatar?.filePath ? this.$apiBaseMediaUrl + getUser.person.avatar.filePath : '')"
+                                 alt="avatar">
+                            <button v-if="avatarUrl !== ''" @click="clearAvatar" class="clear-button">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                        <div v-if="getUser.person" class="col-9 col-md-9 click-to-upload">
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="file"
+                                ref="file"
+                                @change="handleFileUpload"
+                                style="display: none;"
+                            >
+                            <div
+                                class="col-12"
+                                @click="triggerFileInput"
+                                @dragover.prevent
+                                @drop.prevent="handleDrop"
+                            >
+                                <img class="mx-auto d-block" src="@/assets/images/upload-img.svg" alt="">
+                                <p class="text-center mt-2 my-2" id="click" role="button">
+                                    Click to upload
+                                    <span>or drag and drop</span>
+                                </p>
+                                <p class="text-center mt-0">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-5 justify-content-center">
-            <div class="col-12 col-md-8 col-xxl-6 ">
-                <ChangePasswordComponent />
+            <div class="row mt-5 justify-content-center">
+                <div class="col-12 col-md-8 col-xxl-6 ">
+                    <ChangePasswordComponent/>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
 <style scoped>
 body {
     font-family: Inter;
-}
-
-.relative-container {
-    position: relative;
 }
 
 .full-name {
@@ -108,6 +224,16 @@ body {
 
 .form-control {
     padding: 10px 14px 10px 14px;
+    gap: 8px;
+    border-radius: 8px;
+    border: 1px solid #D0D5DD;
+
+}
+
+.email-radius {
+    border-radius: 8px;
+    border: 1px solid #D0D5DD;
+
 }
 
 .nickname {
@@ -119,50 +245,24 @@ body {
     height: 160px;
     border-radius: 200px;
     border: 4px solid #FFFFFF;
-    box-shadow: 0px 4px 6px -2px #10182808;
-    box-shadow: 0px 12px 16px -4px #10182814;
+    box-shadow: 0 4px 6px -2px #10182808;
 }
 
 .verification {
     width: 32px;
     height: 32px;
-    position: relative; /* или relative, fixed */
+    position: relative;
     right: 40px;
     bottom: 5px;
 }
 
-.avatarmini {
+.avatar-mini {
     width: 64px;
     height: 64px;
     border-radius: 200px;
 }
 
-#save-btn {
-    background: #7F56D9;
-    color: white;
-}
-
-#cancel-btn:active {
-    background: #7F56D9;
-    color: white;
-}
-
-#save-btn:active {
-    background: white;
-    color: #7F56D9;
-}
-
-#cancel-btn, #save-btn {
-    padding: 9px 16px 9px 16px;
-    gap: 8px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
-    text-align: left;
-}
-
-#click-to-upload {
+.click-to-upload {
     border: 1px solid #EAECF0;
     border-radius: 12px;
     padding: 10px;
@@ -191,6 +291,24 @@ span {
     color: #6941C6;
 }
 
+.click-to-upload:hover {
+    border-color: #000;
+}
+
+.relative-container {
+    position: relative;
+}
+
+.clear-button {
+    position: absolute;
+    top: 0;
+    right: 55px;
+    border: none;
+    outline: none !important;
+    background: transparent;
+    cursor: pointer;
+}
+
 @media (max-width: 767px) {
     .avatar {
         width: 96px;
@@ -200,10 +318,9 @@ span {
     .verification {
         width: 24px;
         height: 24px;
-        position: relative; /* или relative, fixed */
+        position: relative;
         top: 30px;
         right: 28px;
     }
 }
-
 </style>
