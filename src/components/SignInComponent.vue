@@ -1,102 +1,126 @@
 <script>
+import {mapActions, mapGetters} from "vuex"
+
 export default {
     name: "SignInComponent",
+    data() {
+        return {
+            form: {
+                email: '',
+                password: ''
+            },
+            resetPassword: {
+                email: ''
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['isAdmin']),
+    },
     methods: {
-        
-        ...mapActions(['pushUser']),
-        
-        register() {
-            this.pushUser(this.form)
-        },
-        data() {
-            return {
-                form: {
-                    email: '',
-                    password: '',
-                }
-            }
-        },
-        
+        ...mapActions(['fetchToken', 'fetchRequestResetPassword']),
         togglePasswordVisibility() {
-            const password = document.getElementById("password");
-            
+            const password = document.getElementById("password")
+
             if (password.type === "password") {
-                password.type = "text";
+                password.type = "text"
             } else {
-                password.type = "password";
+                password.type = "password"
             }
-            
+        },
+        auth() {
+            this.fetchToken(this.form)
+        },
+        submitChangePassword() {
+            this.fetchRequestResetPassword(this.resetPassword)
         }
     }
 }
 </script>
 
 <template>
-    <!-- LoginPage Start -->
     <div class="container  position-absolute top-50 start-50 translate-middle">
-        <div class="row">
-            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-5 col-xxl-4
+        <form @submit.prevent="auth">
+            <div class="row">
+                <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-5 col-xxl-4
                 position-absolute top-50 start-50 translate-middle">
-                <form @submit.prevent="register">
                     <div class="mb-3">
                         <h1>Adminga kirish</h1>
-                        <label for="exampleInputEmail1" class="form-label">Login</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1"
-                               placeholder="Loginni kiriting" aria-describedby="emailHelp" v-model="form.email">
+                        <label class="form-label" for="exampleInputEmail1">Login</label>
+                        <input
+                            id="exampleInputEmail1"
+                            v-model="form.email"
+                            aria-describedby="emailHelp"
+                            class="form-control"
+                            placeholder="Loginni kiriting"
+                            type="email"
+                        >
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Parol</label>
                         <div class="input-group mb-3">
-                            <input type="password" class="form-control" id="password"
-                                   placeholder="Parolni kiriting" aria-label="" v-model="form.password">
-                            <span class="input-group-text" @click="togglePasswordVisibility" id="eyeicon">
-                            <img src="../assets/eye.svg" alt="eye.svg"></span>
+                            <input
+                                id="password"
+                                v-model="form.password"
+                                aria-label=""
+                                class="form-control password"
+                                placeholder="Parolni kiriting"
+                                type="password"
+                            >
+                            <span class="input-group-text eye-icon" @click="togglePasswordVisibility">
+                            <img alt="eye.svg" src="../assets/eye.svg"></span>
                         </div>
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <input id="exampleCheck1" class="form-check-input" type="checkbox">
                         <label class="form-check-label" for="exampleCheck1">Eslab qolish</label>
-                        <span type="button" id="forgotpassword" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                              class="d-inline float-end">Parolni unutdim</span>
+                        <span
+                            class="d-inline float-end forgot-password-text"
+                            data-bs-target="#exampleModal"
+                            data-bs-toggle="modal"
+                            type="button"
+                        >
+                            Parolni unutdim
+                        </span>
                     </div>
-                    <button type="submit" id="loginpagebtn" class="btn btn w-100">Kirish</button>
-                </form>
+                    <button class="btn w-100 login-page-btn" type="submit">Kirish</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
-    <!-- LoginPage End -->
-    
-    <!-- ModalSection Start -->
     <div class="container">
         <div class="row">
             <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-5 col-xxl-4">
-                <div class="modal modal fade" id="exampleModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header border-0">
-                                <p>Parolingizni unutdingizmi?</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                <div id="exampleModal" class="modal modal fade">
+                    <div class="modal-dialog modal-dialog-class">
+                        <div class="modal-content modal-content-class">
+                            <div class="modal-header modal-header-class border-0">
+                                <p class="forgot-password">Parolingizni yangilash uchun, pochtaga havola yuborish</p>
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                                        type="button"></button>
                             </div>
-                            <div class="modal-body">
-                                <p>
-                                    Parolingizni unutgan bo'lsangiz dasturchilarga murojaat qiling ular
-                                    sizga parolingizni tiklashda yordam berishadi!
-                                </p>
-                            </div>
-                            <div class="modal-footer border-0 mt-2">
-                                <button id="modalfooterbtn" class="btn btn"
-                                        data-bs-dismiss="modal">Tushunarli
-                                </button>
-                            </div>
+                            <form @submit.prevent="submitChangePassword">
+                                <div class="modal-body modal-body-class">
+                                    <input
+                                        v-model="resetPassword.email"
+                                        aria-describedby="emailHelp"
+                                        class="form-control"
+                                        placeholder="Pochtani kiriting"
+                                        type="email"
+                                    >
+                                </div>
+                                <div class="modal-footer modal-footer-class border-0 mt-2">
+                                    <button class="btn modal-footer-btn" data-bs-dismiss="modal"
+                                            type="submit">Jo'natish
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ModalSection End -->
-
 </template>
 
 <style scoped>
@@ -104,33 +128,33 @@ form button {
     background: #7F56D9;
 }
 
-#loginpagebtn {
+.login-page-btn {
     background-color: #7F56D9;
     color: white;
 }
 
-#forgotpassword {
+.forgot-password-text {
     color: #8300C5;
     text-decoration: none;
 }
 
-.modal-dialog {
+.modal-dialog-class {
     position: relative;
     top: 27%;
 }
 
-.modal-content {
+.modal-content-class {
     height: 280px;
 }
 
-.modal-header {
+.modal-header-class {
     border: none;
     height: 180px;
     background-image: url(../assets/pattern.svg);
     background-repeat: no-repeat;
 }
 
-.modal-header p {
+.forgot-password {
     position: relative;
     left: 7px;
     top: 22px;
@@ -138,18 +162,18 @@ form button {
     font-weight: 600;
 }
 
-.modal-header button {
+.modal-header-class button {
     position: relative;
     bottom: 55px;
     right: 15px;
 }
 
-.modal-body p {
+.modal-body-class p {
     position: relative;
     left: -2px;
 }
 
-.modal-body {
+.modal-body-class {
     position: relative;
     bottom: 55px;
     height: 48px;
@@ -157,7 +181,7 @@ form button {
     left: 10px;
 }
 
-.modal-footer button {
+.modal-footer-class button {
     position: relative;
     bottom: 40px;
     margin: 10px;
@@ -166,23 +190,23 @@ form button {
     width: 100%
 }
 
-#modalfooterbtn {
+.modal-footer-btn {
     background: #7F56D9;
     color: white;
 }
 
-#password {
+.password {
     border-right: none;
 }
 
-#eyeicon {
+.eye-icon {
     border-left: none;
     background-color: #ffff;
     cursor: pointer;
 }
 
 @media only screen and (max-width: 576px) {
-    .modal-dialog {
+    .modal-dialog-class {
         position: relative;
         top: 29%;
     }

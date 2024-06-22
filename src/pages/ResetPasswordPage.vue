@@ -1,10 +1,10 @@
 <script>
 import LogoComponent from "@/components/LogoComponent.vue";
-import ResetPasswordComponent from "@/components/ResetPasswordComponent.vue";
+import ResetPasswordWidthEmailLinkComponent from "@/components/ResetPasswordWidthEmailLinkComponent.vue";
 
 export default {
     name: "LoginPage",
-    components: {ResetPasswordComponent, LogoComponent}
+    components: {ResetPasswordWidthEmailLinkComponent, LogoComponent}
 }
 </script>
 
@@ -15,7 +15,7 @@ export default {
         </div>
     </nav>
     
-    <ResetPasswordComponent/>
+    <ResetPasswordWidthEmailLinkComponent/>
 
 </template>
 

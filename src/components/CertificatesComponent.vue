@@ -1,38 +1,60 @@
 <script>
 import FilterComponent from "@/components/FilterComponent.vue";
-import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
 import PaginationComponent from "@/components/PaginationComponent.vue";
-import {mapActions} from "vuex";
+import CertificatedStudentsComponent from "@/components/CertificatedStudentsComponent.vue";
+import SideBarSlot from "@/components/SideBarSlot.vue";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "CertificatesComponent",
     components: {
+        SideBarSlot,
         PaginationComponent,
         CertificatedStudentsComponent,
         FilterComponent
     },
-
+    computed: {
+        ...mapGetters([
+            'getTotalCertificates',
+            'getCurrentCertificatePage',
+            'getAfterCourseFinishedDate',
+            'getBeforeCourseFinishedDate',
+            'getSearchCertificates',
+            ]),
+    },
     methods: {
-        ...mapActions(['fetchCertificates'])
+        ...mapActions(['fetchCertificates']),
+        onClickHandler(pageNum) {
+            this.fetchCertificates({
+                    page: pageNum,
+                    search: this.getSearchCertificates,
+                    afterCourseFinishedDate: this.getAfterCourseFinishedDate,
+                    beforeCourseFinishedDate: this.getBeforeCourseFinishedDate
+                }
+            )
+        }
     },
     mounted() {
-        this.fetchCertificates('?page=1');
+        this.fetchCertificates({page: 1})
     }
 }
 </script>
 
 <template>
     <div class="ms-lg-3 me-lg-3 mb-5 mt-4">
-        <FilterComponent/>
+        <FilterComponent />
         <div class="p-0 rounded-3 border">
-
-            <CertificatedStudentsComponent/>
-            <PaginationComponent/>
-
+            <CertificatedStudentsComponent />
+            <PaginationComponent
+                :getPaginationItemsPerPage="Number(8)"
+                :total-records="getTotalCertificates"
+                :onClickHandler="onClickHandler"
+                :getCurrentPage="Number(getCurrentCertificatePage)"
+            />
         </div>
     </div>
 </template>
 
-<style>
+<style scoped>
 
 </style>

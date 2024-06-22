@@ -19,7 +19,12 @@ export default {
         changeUserData(context, {id, data}) {
             return putRequest(`users/${id}`, data, 'updateUser', context)
         },
-
+        fetchRequestResetPassword(context, data) {
+            return postRequest('users/request_reset_password', data, 'updateUser', context)
+        },
+        fetchResetPassword(context, data) {
+            return postRequest('/users/reset-password', data, 'updateUser', context)
+        },
     },
     mutations: {
         updateUser(state, user) {

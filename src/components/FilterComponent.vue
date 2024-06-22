@@ -1,6 +1,7 @@
 <script>
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import {mapActions, mapGetters} from "vuex"
 
 export default {
     components: {
@@ -8,35 +9,55 @@ export default {
     },
     data() {
         return {
-            date: [new Date(), new Date()],
-            startDateString: this.formatDate(new Date()),
-            endDateString: this.formatDate(new Date()),
+            date: [null, null],
+            startDateString: null,
+            endDateString: null,
+            selectedRange: 'All'
         }
     },
-    watch: {
-        startDateString(value) {
-            if (!this.date) {
-                this.date = [null, null]
-            }
-            this.date[0] = value ? this.parseDate(value) : null
-        },
-        endDateString(value) {
-            if (!this.date) {
-                this.date = [null, null]
-            }
-            this.date[1] = value ? this.parseDate(value) : null
-        },
-        date(newDates) {
-            if (newDates && newDates.length === 2) {
-                this.startDateString = this.formatDate(newDates[0])
-                this.endDateString = this.formatDate(newDates[1])
-            }
-        },
+    computed: {
+        ...mapGetters([
+            'getCurrentCertificatePage',
+            'getSearchCertificates',
+            'getAfterCourseFinishedDate',
+            'getBeforeCourseFinishedDate'
+        ])
     },
-
     methods: {
+        ...mapActions(['fetchCertificates']),
         handleDateChange(newDates) {
             this.date = newDates
+
+            if (!!this.startDateString && !!this.endDateString) {
+                this.fetchCertificates({
+                    page: 1,
+                    afterCourseFinishedDate: this.startDateString,
+                    beforeCourseFinishedDate: this.endDateString
+                })
+            }
+
+            this.startDateString = null
+            this.endDateString = null
+        },
+        onClear() {
+            this.date = []
+            this.startDateString = null
+            this.endDateString = null
+            this.selectedRange = 'All'
+        },
+        filterClick() {
+            this.fetchCertificates({
+                page: 1,
+                afterCourseFinishedDate: this.startDateString,
+                beforeCourseFinishedDate: this.endDateString,
+                search: this.getSearchCertificates
+            })
+        },
+        setNullDay() {
+            this.date = []
+            this.startDateString = null
+            this.endDateString = null
+            this.selectedRange = 'All'
         },
         setLastDay() {
             const today = new Date()
@@ -44,6 +65,7 @@ export default {
             lastDayStart.setDate(today.getDate() - 1)
             const lastDayEnd = new Date(today)
             this.date = [lastDayStart, lastDayEnd]
+            this.selectedRange = 'LastDay'
         },
         setLastWeek() {
             const today = new Date()
@@ -51,6 +73,7 @@ export default {
             lastWeekStart.setDate(today.getDate() - 7)
             const lastWeekEnd = new Date(today)
             this.date = [lastWeekStart, lastWeekEnd]
+            this.selectedRange = 'LastWeek'
         },
         setLastMonth() {
             const today = new Date()
@@ -58,6 +81,7 @@ export default {
             lastMonthStart.setDate(today.getDate() - 30)
             const lastMonthEnd = new Date(today)
             this.date = [lastMonthStart, lastMonthEnd]
+            this.selectedRange = 'LastMonth'
         },
         setLastYear() {
             const today = new Date()
@@ -65,23 +89,83 @@ export default {
             lastYearStart.setDate(today.getDate() - 365)
             const lastYearEnd = new Date(today)
             this.date = [lastYearStart, lastYearEnd]
+            this.selectedRange = 'LastYear'
         },
         formatDate(date) {
-            if (!date) return ''
+            if (!date) {
+                return ''
+            }
+
             const d = new Date(date)
             let day = '' + d.getDate()
             let month = '' + (d.getMonth() + 1)
             const year = d.getFullYear()
 
-            if (month.length < 2) month = '0' + month
-            if (day.length < 2) day = '0' + day
+            if (month.length < 2) {
+                month = '0' + month
+            }
+
+            if (day.length < 2) {
+                day = '0' + day
+            }
 
             return [year, month, day].join('-')
         },
         parseDate(dateString) {
-            if (!dateString) return null
+            if (!dateString) {
+                return null
+            }
+
             const [year, month, day] = dateString.split('-')
             return new Date(year, month - 1, day)
+        },
+        fillFormWithData() {
+            this.startDateString = this.getAfterCourseFinishedDate
+            this.endDateString = this.getBeforeCourseFinishedDate
+
+            if (this.startDateString && this.endDateString) {
+                this.date = [
+                    this.parseDate(this.startDateString),
+                    this.parseDate(this.endDateString)
+                ]
+
+                const startDate = new Date(this.startDateString)
+                const endDate = new Date(this.endDateString)
+                const diffTime = Math.abs(endDate - startDate)
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+                if (diffDays === 1) {
+                    this.selectedRange = 'LastDay'
+                } else if (diffDays <= 7) {
+                    this.selectedRange = 'LastWeek'
+                } else if (diffDays <= 30) {
+                    this.selectedRange = 'LastMonth'
+                } else if (diffDays <= 365) {
+                    this.selectedRange = 'LastYear'
+                } else {
+                    this.selectedRange = 'All'
+                }
+            }
+        },
+    },
+    created() {
+        this.fillFormWithData()
+    },
+    watch: {
+        startDateString(value) {
+            this.date[0] = value ? this.parseDate(value) : null
+        },
+        endDateString(value) {
+            this.date[1] = value ? this.parseDate(value) : null
+        },
+        date(newDates) {
+            if (newDates && newDates.length === 2 && newDates[0] !== null && newDates[1] !== null) {
+                this.startDateString = this.formatDate(newDates[0])
+                this.endDateString = this.formatDate(newDates[1])
+            } else if (newDates === null) {
+                this.startDateString = ''
+                this.endDateString = ''
+            }
         },
     },
 }
@@ -90,17 +174,22 @@ export default {
 <template>
     <div
         class="d-flex justify-content-md-between flex-column flex-md-row justify-content-start align-items-md-center filter-container">
-        <div class="btn-group">
-            <button class="btn range-button">Hammasi</button>
-            <button class="btn range-button" @click="setLastMonth">
+        <div class="btn-group btn-group-custom">
+            <button :class="{ 'active-button': selectedRange === 'All' }" class="btn range-button" @click="setNullDay">
+                Hammasi
+            </button>
+            <button :class="{ 'active-button': selectedRange === 'LastMonth' }" class="btn range-button"
+                    @click="setLastMonth">
                 <span class="d-none d-md-block">30 kunlik</span>
                 <span class="d-md-none d-inline">30 k</span>
             </button>
-            <button class="btn range-button" @click="setLastWeek">
+            <button :class="{ 'active-button': selectedRange === 'LastWeek' }" class="btn range-button"
+                    @click="setLastWeek">
                 <span class="d-none d-md-block">7 kunlik</span>
                 <span class="d-md-none d-inline">7 k</span>
             </button>
-            <button class="btn range-button" @click="setLastDay">
+            <button :class="{ 'active-button': selectedRange === 'LastDay' }" class="btn range-button"
+                    @click="setLastDay">
                 <span class="d-none d-md-block">24 soatlik</span>
                 <span class="d-md-none d-inline">24 s</span>
             </button>
@@ -108,28 +197,29 @@ export default {
         <div class="d-flex mt-3 mt-md-0">
             <div class="theme d-none d-md-block">
                 <VueDatePicker
+                    ref="dp"
                     v-model="date"
                     :auto-apply="false"
-                    range
                     :clearable="false"
-                    :multi-calendars="{ solo: true }"
                     :enable-time-picker="false"
-                    ref="dp"
+                    :multi-calendars="{ solo: true }"
+
                     month-name-format="long"
+                    range
                     @update:model-value="handleDateChange"
                 >
-                    <template #dp-input="{ value, onClear }">
-                        <button class="select-date-btn" type="button" v-if="!value">
+                    <template #dp-input="{ value }">
+                        <button v-if="(date[0] && date[1]) === null" class="select-date-btn" type="button">
                             <span>
-                              <img class="mb-1" src="@/assets/images/calendar.svg" alt=""/>
+                              <img alt="" class="mb-1" src="@/assets/images/calendar.svg"/>
                               <span class="ms-1">Sanani tanlang</span>
                             </span>
                         </button>
-                        <button class="select-date-btn" v-else @click="onClear">
+                        <button v-else class="select-date-btn" @click="onClear">
                             <span class="d-flex align-items-center">
                                 <span>{{ value }}</span>
                                 <span class="mx-1"></span>
-                                <img width="15" src="@/assets/images/close-icon.svg" alt=""/>
+                                <img alt="" src="@/assets/images/close-icon.svg" width="15"/>
                             </span>
                         </button>
                     </template>
@@ -139,17 +229,19 @@ export default {
                             <div class="d-flex align-items-center justify-content-center">
                                 <input
                                     id="date-input-start"
-                                    class="date-input"
-                                    v-mask-date
-                                    placeholder="YYYY-OO-KK"
                                     v-model="startDateString"
+                                    v-mask-date
+                                    class="date-input"
+                                    placeholder="YYYY-OO-KK"
+                                    @keyup.enter="selectDate"
                                 /> -
                                 <input
                                     id="date-input-end"
-                                    class="date-input"
-                                    v-mask-date
-                                    placeholder="YYYY-OO-KK"
                                     v-model="endDateString"
+                                    v-mask-date
+                                    class="date-input"
+                                    placeholder="YYYY-OO-KK"
+                                    @keyup.enter="selectDate"
                                 />
                             </div>
                         </div>
@@ -162,26 +254,26 @@ export default {
             </div>
             <div class="theme d-block d-md-none">
                 <VueDatePicker
+                    ref="dp"
                     v-model="date"
-                    range
                     :clearable="false"
                     :enable-time-picker="false"
-                    ref="dp"
                     month-name-format="long"
+                    range
                     @update:model-value="handleDateChange"
                 >
                     <template #dp-input="{ value, onClear }">
-                        <button class="select-date-btn" type="button" v-if="!value">
+                        <button v-if="date === null" class="select-date-btn" type="button">
                             <span>
-                                <img class="mb-1" src="@/assets/images/calendar.svg" alt=""/>
+                                <img alt="" class="mb-1" src="@/assets/images/calendar.svg"/>
                                 <span class="ms-1">Sanani tanlang</span>
                             </span>
                         </button>
-                        <button class="select-date-btn" v-else @click="onClear">
+                        <button v-else class="select-date-btn" @click="onClear">
                             <span class="d-flex align-items-center">
                                 <span>{{ value }}</span>
                                 <span class="mx-1"></span>
-                                <img width="15" src="@/assets/images/close-icon.svg" alt=""/>
+                                <img alt="" src="@/assets/images/close-icon.svg" width="15"/>
                             </span>
                         </button>
                     </template>
@@ -189,17 +281,19 @@ export default {
                         <div class="d-flex align-items-center justify-content-center">
                             <input
                                 id="date-input-start"
-                                class="date-input"
-                                v-mask-date
-                                placeholder="YYYY-OO-KK"
                                 v-model="startDateString"
+                                v-mask-date
+                                class="date-input"
+                                placeholder="YYYY-OO-KK"
+                                @keyup.enter="selectDate"
                             /> -
                             <input
                                 id="date-input-end"
-                                class="date-input"
-                                v-mask-date
-                                placeholder="YYYY-OO-KK"
                                 v-model="endDateString"
+                                v-mask-date
+                                class="date-input"
+                                placeholder="YYYY-OO-KK"
+                                @keyup.enter="selectDate"
                             />
                         </div>
                         <div class="d-flex justify-content-between w-100 mt-2">
@@ -220,8 +314,8 @@ export default {
                 </VueDatePicker>
             </div>
             <div class="action-buttons ms-3">
-                <button class="filter-button action-button">
-                    <img class="mb-1" src="@/assets/images/filter-lines.svg" alt="asd"/>
+                <button class="filter-button action-button" @click="filterClick">
+                    <img alt="asd" class="mb-1" src="@/assets/images/filter-lines.svg"/>
                     <span class="ms-1">Filtrlash</span>
                 </button>
             </div>
@@ -242,16 +336,14 @@ export default {
     font-weight: 600;
 }
 
-.container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-}
-
-.btn-group {
+.btn-group-custom {
     height: 40px;
     display: flex;
+}
+
+.btn-group-custom .btn.active-button {
+    background-color: #D0D5DD;
+    color: white;
 }
 
 .filter-button {
@@ -375,28 +467,6 @@ button.select-date-btn {
     font-size: 14px;
 }
 
-.dp__action_cancel {
-    margin-right: 10px;
-    height: 40px;
-    padding: 10px 22px 10px 22px;
-    gap: 8px;
-    border-radius: 8px;
-}
-
-.dp__action_select {
-    margin-right: 15px;
-    height: 40px;
-    padding: 10px 22px 10px 22px;
-    gap: 8px;
-    border-radius: 8px;
-}
-
-.dp__action_button {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 20px;
-    text-align: left;
-}
 
 :root {
     /*General*/
