@@ -38,7 +38,6 @@ const routes = [
         path: '/reset-password/:secretKey',
         component: () => import('@/pages/ResetPasswordPage.vue')
     },
-
 ]
 
 const router = createRouter({
