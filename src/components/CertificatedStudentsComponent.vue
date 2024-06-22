@@ -1,26 +1,93 @@
 <script>
-
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex"
 
 export default {
     name: "CertificatedStudentsComponent",
+    data() {
+        return {
+            search: ''
+        }
+    },
     computed: {
-        ...mapGetters(['getCertificates'])
+        ...mapGetters([
+            'getCertificates',
+            'getTotalCertificates',
+            'getAfterCourseFinishedDate',
+            'getBeforeCourseFinishedDate',
+            'getCurrentCertificatePage',
+            'getSearchCertificates'
+        ])
+    },
+    methods: {
+        ...mapActions(['fetchCertificates', 'deleteCertificate']),
+        handleSearch() {
+            if (!this.search.trim()) {
+                return
+            }
+
+            this.fetchCertificates({
+                page: 1,
+                search: this.search,
+                afterCourseFinishedDate: this.getAfterCourseFinishedDate,
+                beforeCourseFinishedDate: this.getBeforeCourseFinishedDate
+            })
+        },
+        clearSearch() {
+            this.search = ''
+            this.fetchCertificates({
+                page: 1,
+                afterCourseFinishedDate: this.getAfterCourseFinishedDate,
+                beforeCourseFinishedDate: this.getBeforeCourseFinishedDate
+            })
+        },
+        removeCertificate(id) {
+            if (confirm('Sertifikatni o\'chirishni tasdiqlaysizmi ?')) {
+                this.deleteCertificate(id)
+                    .then(() => {
+                        this.fetchCertificates({
+                            page: this.getCurrentCertificatePage,
+                            search: this.search,
+                            afterCourseFinishedDate: this.getAfterCourseFinishedDate,
+                            beforeCourseFinishedDate: this.getBeforeCourseFinishedDate
+                        })
+                        alert('Sertifikat muvaffaqiyatli o\'chirildi')
+                    })
+            }
+        },
+        editCertificate(id) {
+            this.$router.push({path: `/admin/certificate-edit/${id}`});
+        },
+        fillFormWithData() {
+            this.search = this.getSearchCertificates
+        },
+    },
+    created() {
+        this.fillFormWithData()
     },
 }
 </script>
 
 <template>
     <header class="row d-flex justify-content-between align-items-center m-0 rounded-top-3">
-        <div class="col-12 col-md-7 col-lg-8 col-xl-9 mb-3 m-md-0">
-            <h1 class="fs-5 m-0">Sertifikat olganlar ro’yxati <span class="badge rounded-pill">120 o'quvchi</span></h1>
+        <div class="col-12 col-md-7 mb-3 m-md-0">
+            <h1 class="fs-5 m-0">
+                Sertifikat olganlar ro’yxati
+                <span class="certificates-count">{{getTotalCertificates}}ta sertifikat</span>
+            </h1>
         </div>
-        <div class="col-12 col-md-5 col-lg-4 col-xl-3">
+        <div class="col-12 col-md-5">
             <label class="input-group border border-2 rounded-2">
-                <i id="basic-addon1" class="bi bi-search bg-white input-group-text border-0"></i>
-                <input aria-describedby="basic-addon1" class="form-control shadow-none border-0 ps-0"
-                       placeholder="Search"
-                       type="text">
+                <input
+                    v-model="search"
+                    aria-describedby="basic-addon1"
+                    class="form-control shadow-none border-0 ps-0"
+                    placeholder=" Search"
+                    type="text"
+                    @keyup.enter="handleSearch"
+                >
+                <button v-show="search !== ''" @click="clearSearch"><i class="bi bi-x-lg"></i></button>
+                <button class="" @click="handleSearch"><i class="bi bi-search bg-white input-group-text border-0"></i>
+                </button>
             </label>
         </div>
     </header>
@@ -43,15 +110,18 @@ export default {
                 <div class="d-none d-md-block col-md-2"></div>
             </div>
             <div class="students-table-body">
-                <!--student info begins-->
-                <div v-for="certificate of getCertificates" :key="certificate.id"
-                     class="students-list row m-0 border-bottom"
+                <div v-for="certificate of getCertificates"
+                     :key="certificate.id" class="students-list row m-0 border-bottom"
                 >
                     <div class="col-12 col-md-10 p-0">
-                        <a class="row text-decoration-none m-0" href="#">
+                        <router-link :to="'/admin/certificate-info/' + certificate.id"
+                                     class="row text-decoration-none m-0">
                             <div class="col-6 col-md-4 table-body-content d-flex align-content-center">
                                 <div class="d-inline-block">
-                                    <img alt="olivia" class="rounded-circle border" src="/src/assets/olivia.png">
+                                    <img
+                                        :src="certificate.owner?.person?.avatar?.filePath ? `${this.$apiBaseMediaUrl}${certificate.owner.person.avatar.filePath}` : ''"
+                                        alt="avatar"
+                                        class="rounded-circle border">
                                 </div>
                                 <div class="d-inline-block ms-2 align-content-center">
                                     <p class="student-name m-0">{{ certificate.owner.person.givenName }}
@@ -65,24 +135,24 @@ export default {
                             <div class="d-none d-md-block col-md-4 col-md table-body-content align-content-center">
                                 {{ certificate.owner.email }}
                             </div>
-                        </a>
+                        </router-link>
                     </div>
                     <div class="d-none d-md-block col-md-2 table-body-content align-content-center">
                         <div class="text-center float-end">
-                            <button class="list-icon p-0 m-0" type="button"><i class="bi bi-trash"></i></button>
-                            <button class="list-icon p-0 m-0" type="button"><i class="bi bi-pencil"></i></button>
+                            <button class="list-icon p-0 m-0" type="button" @click="removeCertificate(certificate.id)">
+                                <i
+                                    class="bi bi-trash"></i></button>
+                            <button class="list-icon p-0 m-0" type="button" @click="editCertificate(certificate.id)"><i
+                                class="bi bi-pencil"></i></button>
                         </div>
                     </div>
                 </div>
-                <!--student info ends-->
-
-                <!-- Delete rows 67-203 -->
             </div>
         </div>
     </section>
 </template>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 :root {
@@ -95,7 +165,7 @@ export default {
 
 body {
     background-color: whitesmoke !important;
-    font-family: var(--Inter), serif !important;
+    font-family: var(--Inter) !important;
     font-weight: 400 !important;
     font-size: 14px !important;
 }
@@ -110,6 +180,21 @@ header {
     background-color: var(--Magnolia);
     border: 1px solid var(--PaleLavender);
     color: var(--Primary) !important;
+}
+
+.certificates-count {
+    padding: 2px 8px 2px 8px;
+    gap: 0;
+    border-radius: 16px;
+    background: #F9F5FF;
+    border: 1px solid #E9D7FE;
+    color: #6941C6 !important;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    text-align: center;
+
 }
 
 h1 {
