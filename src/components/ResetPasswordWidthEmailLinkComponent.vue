@@ -1,5 +1,7 @@
 <script>
 
+import {mapActions} from "vuex";
+
 export default {
     name: "ResetPasswordWidthEmailLinkComponent",
     data() {
@@ -22,6 +24,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['fetchResetPassword']),
         showPasswordTemporary(field) {
             this[field] = true
         },
@@ -31,6 +34,9 @@ export default {
         setSecretKey() {
             return  (new URLSearchParams(window.location.search)).get('secretKey')
         },
+        setResetPassword() {
+            this.fetchResetPassword(this.form)
+        }
     },
     mounted() {
         this.form.secretKey = this.setSecretKey()
@@ -40,7 +46,7 @@ export default {
 
 <template>
     <div class="container  position-absolute top-50 start-50 translate-middle">
-        <form>
+        <form @submit.prevent="setResetPassword">
             <div class="row">
                 <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-5 col-xxl-4
                 position-absolute top-50 start-50 translate-middle">
