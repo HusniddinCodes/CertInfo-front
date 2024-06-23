@@ -34,7 +34,10 @@ const routes = [
         path: '/sign-in',
         component: () => import('@/pages/LoginPage.vue')
     },
-
+    {
+        path: '/reset-password/:secretKey',
+        component: () => import('@/pages/ResetPasswordPage.vue')
+    },
 ]
 
 const router = createRouter({
