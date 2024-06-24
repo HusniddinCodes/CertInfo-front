@@ -1,9 +1,11 @@
 <script>
 
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import SuccessAndErrorModal from "@/components/SuccessAndErrorModal.vue";
 
 export default {
     name: "ResetPasswordWidthEmailLinkComponent",
+    components: {SuccessAndErrorModal},
     data() {
         return {
             form: {
@@ -16,6 +18,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(["getResponse"]),
         isSubmitDisabled() {
             return this.form.newPassword === '' ||
                 this.newPasswordRetry === '' ||
@@ -36,6 +39,13 @@ export default {
         },
         setResetPassword() {
             this.fetchResetPassword(this.form)
+        },
+        redirectToHome() {
+            if (this.getResponse.status === 200) {
+                window.location.href = "/admin/certificates"
+            } else {
+                window.location.href = "/sign-in"
+            }
         }
     },
     mounted() {
@@ -92,6 +102,7 @@ export default {
             </div>
         </form>
     </div>
+    <SuccessAndErrorModal :getResponse="getResponse" :redirectToURL="redirectToHome"/>
 </template>
 
 <style>
