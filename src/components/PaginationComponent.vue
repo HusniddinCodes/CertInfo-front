@@ -160,7 +160,7 @@ export default {
 .prev-btn, .next-btn {
     width: 118px;
     height: 36px;
-    padding: 7px 14px;
+    padding: 5px 14px;
     gap: 8px;
     border-radius: 8px;
     border: 1px solid #D0D5DD;

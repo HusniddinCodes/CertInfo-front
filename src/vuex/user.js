@@ -11,7 +11,11 @@ export default {
             return postRequest('/users/auth', data, 'updateTokens', context)
         },
         fetchUser(context, data) {
+            context.commit('updateIsLoadingSettings', true)
             return postRequest('/users/about_me', data, 'updateUser', context)
+                .finally(() => {
+                    context.commit('updateIsLoadingSettings', false)
+                })
         },
         fetchUsers(context, data) {
             return getRequest('/users', data, 'updateUsers', context)
@@ -28,7 +32,7 @@ export default {
     },
     mutations: {
         updateUser(state, user) {
-            state.user = user
+            state.user = user.data
         },
         updateUsers(state, users) {
             state.users = users
@@ -39,6 +43,9 @@ export default {
 
             state.accessToken = tokens.accessToken
             state.refreshToken = tokens.refreshToken
+        },
+        updateIsLoadingSettings(state, isLoading) {
+            state.isLoading = isLoading
         },
     },
     state: {
@@ -56,7 +63,8 @@ export default {
         users: {
             models: [],
             totalItems: 0
-        }
+        },
+        isLoading: false
     },
     getters: {
         getUser(state) {
@@ -67,6 +75,9 @@ export default {
         },
         getAccessToken(state) {
             return state.accessToken
+        },
+        getIsLoadingSettings(state) {
+            return state.isLoading
         },
         isAdmin: (state) => {
             try {

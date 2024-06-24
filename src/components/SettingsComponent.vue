@@ -3,10 +3,11 @@ import ChangePasswordComponent from "@/components/ChangePasswordComponent.vue"
 import SuccessButton from "@/components/SuccessButton.vue"
 import CancelButton from "@/components/CancelButton.vue"
 import { mapActions, mapGetters } from "vuex"
+import IsLoading from "@/components/isLoading.vue";
 
 export default {
     name: "SettingsComponent",
-    components: {CancelButton, SuccessButton, ChangePasswordComponent},
+    components: {IsLoading, CancelButton, SuccessButton, ChangePasswordComponent},
     data() {
         return {
             form: {
@@ -20,8 +21,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getUser", "getPicture"]),
-
+        ...mapGetters(["getUser", "getPicture", 'getIsLoadingSettings']),
+        isLoading() {
+            return this.getIsLoadingSettings
+        },
     },
     methods: {
         ...mapActions(["fetchUser", "pushPicture", "changeUserData"]),
@@ -97,7 +100,9 @@ export default {
 </script>
 
 <template>
-    <div class="px-3 py-3">
+    <IsLoading v-if="isLoading" />
+
+    <div class="px-3 py-3" v-else>
         <form @submit.prevent="updateUserData">
             <div
                 class="mt-5 d-flex justify-content-start flex-column flex-md-row justify-content-md-between align-items-md-center">

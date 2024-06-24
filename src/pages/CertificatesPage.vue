@@ -1,6 +1,6 @@
 <script>
 import SideBarSlot from "@/components/SideBarSlot.vue"
-import CertificatesComponent from "@/components/CertificatesComponent.vue";
+import CertificatesComponent from "@/components/CertificatesComponent.vue"
 
 export default {
     name: "CertificatesPage",

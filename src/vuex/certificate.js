@@ -12,12 +12,21 @@ export default {
             return putRequest(`/certificates/${id}`, data, 'updateCertificate', context)
         },
         fetchCertificate(context, id) {
+            context.commit('updateIsLoadingCertificates', true)
             return getRequest('/certificates/' + id, 'updateCertificate', context)
+                .finally(() => {
+                    context.commit('updateIsLoadingCertificates', false)
+                })
         },
         fetchCertificateScanQr(context, id) {
+            context.commit('updateIsLoadingCertificates', true)
             return getRequest('/certificates/scan_qr/' + id, 'updateCertificate', context)
+                .finally(() => {
+                    context.commit('updateIsLoadingCertificates', false)
+                })
         },
         fetchCertificates(context, data) {
+            context.commit('updateIsLoadingCertificates', true)
             let url = '?page=' +data.page
 
             if (data.beforeCourseFinishedDate) {
@@ -38,6 +47,9 @@ export default {
                     context.commit('updateAfterCourseFinishedDate', data.afterCourseFinishedDate)
                     context.commit('updateCurrentCertificatePage', data.page)
                     context.commit('updateSearch', data.search)
+                })
+                .finally(() => {
+                    context.commit('updateIsLoadingCertificates', false)
                 })
         },
         deleteCertificate(context, id) {
@@ -64,6 +76,9 @@ export default {
         updateSearch(state, search) {
             state.search = search
         },
+        updateIsLoadingCertificates(state, isLoading) {
+            state.isLoading = isLoading
+        },
     },
     state: {
         certificate: {
@@ -84,7 +99,6 @@ export default {
         certificateByQrCode: {
             certificateByQrCode: {
                 "@id": null,
-
                 id: null,
                 givenName: null,
                 familyName: null,
@@ -105,6 +119,7 @@ export default {
         afterCourseFinishedDate: null,
         beforeCourseFinishedDate: null,
         search: '',
+        isLoading: false
     },
     getters: {
         getCertificate(state) {
@@ -127,6 +142,9 @@ export default {
         },
         getSearchCertificates(state) {
             return state.search
+        },
+        getIsLoadingCertificates(state) {
+            return state.isLoading
         },
     }
 }

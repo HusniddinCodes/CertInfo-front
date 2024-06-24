@@ -3,28 +3,25 @@ import getRequest from "@/vuex/request/getRequest.js";
 import axios from "@/vuex/axios.js"
 
 export default {
-    namespaced: true,
     actions: {
         pushCourse(context, data) {
-            return postRequest('/courses', data, 'updateCourse', context);
+            context.commit('updateIsLoadingCourses', true)
+            return postRequest('/courses', data, 'updateCourse', context)
+                .finally(() => {
+                    context.commit('updateIsLoadingCourses', false)
+                })
         },
         fetchCourse(context, id) {
-            return getRequest('/courses/' + id, 'updateCourse', context);
+            return getRequest('/courses/' + id, 'updateCourse', context)
         },
         fetchCourses(context) {
-            return new Promise((resolve, reject) => {
-                axios
-                    .get('/courses')
-                    .then((response) => {
-                        let courses = {
-                            models: response.data['hydra:member'],
-                            totalItems: response.data['hydra:totalItems']
-                        };
-                        context.commit('updateCourses', courses);
-                        resolve();
-                    })
-            });
+            context.commit('updateIsLoadingCourses', true)
+            return getRequest('/courses', 'updateCourses', context)
+                .finally(() => {
+                    context.commit('updateIsLoadingCourses', false)
+                })
         }
+
     },
     mutations: {
         updateCourse(state, course) {
@@ -32,7 +29,10 @@ export default {
         },
         updateCourses(state, courses) {
             state.courses = courses
-        }
+        },
+        updateIsLoadingCourses(state, isLoading) {
+            state.isLoading = isLoading
+        },
     },
     state: {
         course: {
@@ -45,7 +45,8 @@ export default {
         courses: {
             models: [],
             totalItems: 0
-        }
+        },
+        isLoading: false
     },
     getters: {
         getCourse(state) {
@@ -53,6 +54,9 @@ export default {
         },
         getCourses(state) {
             return state.courses.models
+        },
+        getIsLoadingCourses(state) {
+            return state.isLoading
         }
     }
-};
+}
