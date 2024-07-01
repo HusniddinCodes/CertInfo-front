@@ -2,7 +2,7 @@
 import {mapActions, mapGetters, mapMutations} from "vuex"
 import CancelButton from "@/components/CancelButton.vue"
 import SuccessButton from "@/components/SuccessButton.vue"
-import IsLoading from "@/components/isLoading.vue";
+import IsLoading from "@/components/isLoading.vue"
 
 export default {
     components: {
@@ -101,15 +101,20 @@ export default {
             this.avatarUrl = null
         },
         formatDate(date) {
-            const d = new Date(date);
-            let month = '' + (d.getMonth() + 1);
-            let day = '' + d.getDate();
-            const year = d.getFullYear();
+            const d = new Date(date)
+            let month = '' + (d.getMonth() + 1)
+            let day = '' + d.getDate()
+            const year = d.getFullYear()
 
-            if (month.length < 2) month = '0' + month;
-            if (day.length < 2) day = '0' + day;
+            if (month.length < 2) {
+                month = '0' + month
+            }
 
-            return [year, month, day].join('-');
+            if (day.length < 2) {
+                day = '0' + day
+            }
+
+            return [year, month, day].join('-')
         },
         loadCertificateData() {
             this.fetchCertificate(this.certificateId)
@@ -282,7 +287,7 @@ export default {
                                         id="file"
                                         ref="file"
                                         @change="handleFileUpload"
-                                        style="display: none;"
+                                        style="display: none"
                                     >
                                     <div
                                         class="col-12"
@@ -314,7 +319,6 @@ export default {
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 #click-to-upload {
     border: 1px solid #EAECF0;
     border-radius: 12px;

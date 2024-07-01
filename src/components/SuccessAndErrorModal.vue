@@ -11,6 +11,7 @@ export default {
         if (successModal) {
             successModal.addEventListener('hidden.bs.modal', this.redirectToURL)
         }
+
         if (errorModal) {
             errorModal.addEventListener('hidden.bs.modal', this.redirectToURL)
         }
