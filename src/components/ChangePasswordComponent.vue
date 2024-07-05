@@ -1,11 +1,12 @@
 <script>
-import { mapGetters } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import SuccessButton from "@/components/SuccessButton.vue";
 import CancelButton from "@/components/CancelButton.vue";
+import SuccessAndErrorModal from "@/components/SuccessAndErrorModal.vue";
 
 export default {
     name: "ChangePasswordComponent",
-    components: { CancelButton, SuccessButton },
+    components: {SuccessAndErrorModal, CancelButton, SuccessButton },
     data() {
         return {
             form: {
@@ -20,7 +21,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getUser']),
+        ...mapGetters(['getUser', 'getResponse']),
         isSubmitDisabled() {
             return this.form.oldPassword === '' ||
                 this.form.newPassword === '' ||
@@ -30,6 +31,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['changePassword']),
         showNewPasswordTemporary(field) {
             this[field] = true;
         },
@@ -38,7 +40,15 @@ export default {
         },
         toggleMenu() {
             this.showMenu = !this.showMenu;
-        }
+        },
+        submitChangePassword() {
+            this.changePassword({ id: this.getUser.id, data: this.form });
+        },
+        redirectToHome() {
+            if (this.getResponse.status === 200) {
+                window.location.href = "/admin/certificates";
+            }
+        },
     }
 }
 </script>
@@ -54,7 +64,7 @@ export default {
 
     <div v-if="showMenu" class="">
         <div class="dropdown-content">
-            <form>
+            <form @submit.prevent="submitChangePassword">
                 <div class="mt-4">
                     <label for="oldPassword" class="form-label">Eski parol</label>
                     <div class="input-group">
@@ -119,6 +129,7 @@ export default {
             </form>
         </div>
     </div>
+    <SuccessAndErrorModal :getResponse="getResponse" :redirectToURL="redirectToHome"/>
 </template>
 
 <style scoped>

@@ -3,10 +3,12 @@ import ChangePasswordComponent from "@/components/ChangePasswordComponent.vue"
 import SuccessButton from "@/components/SuccessButton.vue"
 import CancelButton from "@/components/CancelButton.vue"
 import { mapActions, mapGetters } from "vuex"
+import IsLoading from "@/components/isLoading.vue";
+import SuccessAndErrorModal from "@/components/SuccessAndErrorModal.vue";
 
 export default {
     name: "SettingsComponent",
-    components: {CancelButton, SuccessButton, ChangePasswordComponent},
+    components: {SuccessAndErrorModal, IsLoading, CancelButton, SuccessButton, ChangePasswordComponent},
     data() {
         return {
             form: {
@@ -20,8 +22,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getUser", "getPicture"]),
-
+        ...mapGetters(["getUser", "getPicture", "getUserResponse", 'getResponse', 'getIsLoadingSettings']),
+        isLoading() {
+            return this.getIsLoadingSettings
+        },
     },
     methods: {
         ...mapActions(["fetchUser", "pushPicture", "changeUserData"]),
@@ -77,7 +81,12 @@ export default {
         clearAvatar() {
             this.file = ''
             this.avatarUrl = ''
-        }
+        },
+        redirectToHome() {
+            if (this.getResponse.status === 200) {
+                window.location.href = "/admin/certificates"
+            }
+        },
     },
     mounted() {
         this.fetchUser({})
@@ -97,7 +106,9 @@ export default {
 </script>
 
 <template>
-    <div class="px-3 py-3">
+    <IsLoading v-if="isLoading" />
+
+    <div class="px-3 py-3" v-else>
         <form @submit.prevent="updateUserData">
             <div
                 class="mt-5 d-flex justify-content-start flex-column flex-md-row justify-content-md-between align-items-md-center">
@@ -207,6 +218,7 @@ export default {
                 </div>
             </div>
         </form>
+        <SuccessAndErrorModal :getResponse="getResponse" :redirectToURL="redirectToHome"/>
     </div>
 </template>
 

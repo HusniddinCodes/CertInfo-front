@@ -1,8 +1,11 @@
 <script>
 import {mapActions, mapGetters} from "vuex"
+import SuccessAndErrorModal from "@/components/SuccessAndErrorModal.vue"
+import IsLoading from "@/components/isLoading.vue";
 
 export default {
     name: "SignInComponent",
+    components: {IsLoading, SuccessAndErrorModal},
     data() {
         return {
             form: {
@@ -15,7 +18,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAdmin']),
+        ...mapGetters(['isAdmin', 'getResponse', 'getIsLoadingSettings']),
+        isLoading() {
+            return this.getIsLoadingSettings
+        }
     },
     methods: {
         ...mapActions(['fetchToken', 'fetchRequestResetPassword']),
@@ -30,6 +36,13 @@ export default {
         },
         auth() {
             this.fetchToken(this.form)
+                .then(() => {
+                    if (this.isAdmin && this.getResponse.status === 200) {
+                        this.$router.push('/admin/certificates')
+                    } else if (this.getResponse.status === 200) {
+                        this.$router.push('/')
+                    }
+                })
         },
         submitChangePassword() {
             this.fetchRequestResetPassword(this.resetPassword)
@@ -39,7 +52,9 @@ export default {
 </script>
 
 <template>
-    <div class="container  position-absolute top-50 start-50 translate-middle">
+    <IsLoading v-if="isLoading"/>
+
+    <div v-else class="container  position-absolute top-50 start-50 translate-middle">
         <form @submit.prevent="auth">
             <div class="row">
                 <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-5 col-xxl-4
@@ -70,6 +85,8 @@ export default {
                             <span class="input-group-text eye-icon" @click="togglePasswordVisibility">
                             <img alt="eye.svg" src="../assets/eye.svg"></span>
                         </div>
+                    </div>
+                    <div v-if="getResponse.status === 401" class="mt-2 mb-2 text-danger">{{ getResponse.description }}
                     </div>
                     <div class="mb-3 form-check">
                         <input id="exampleCheck1" class="form-check-input" type="checkbox">
@@ -121,6 +138,7 @@ export default {
             </div>
         </div>
     </div>
+    <SuccessAndErrorModal :getResponse="getResponse"/>
 </template>
 
 <style scoped>

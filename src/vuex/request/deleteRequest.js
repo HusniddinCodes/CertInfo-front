@@ -6,10 +6,10 @@ export default function (url, id, mutationName, context) {
             .delete(url + id)
             .then(response => {
                 context.commit(mutationName, response)
-                resolve()
+                resolve(response)
             })
-            .catch(() => {
-                reject()
+            .catch((error) => {
+                reject(error)
             })
     })
 }

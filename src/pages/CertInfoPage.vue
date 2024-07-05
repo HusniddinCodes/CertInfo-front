@@ -1,8 +1,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex"
+import IsLoading from "@/components/isLoading.vue"
 
 export default {
     name: "CertInfoPage",
+    components: {IsLoading},
     methods: {
         ...mapActions(['fetchCertificate', 'fetchCertificateScanQr']),
         goBack() {
@@ -10,7 +12,10 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['getCertificate']),
+        ...mapGetters(['getCertificate', 'getIsLoadingCertificates']),
+        isLoading() {
+            return this.getIsLoadingCertificates
+        }
     },
     mounted() {
         this.fetchCertificate(this.$route.params.certificateId)
@@ -19,7 +24,9 @@ export default {
 </script>
 
 <template>
-    <div class="pb-4">
+    <IsLoading v-if="isLoading" />
+
+    <div class="pb-4" v-else>
         <div class="user-info-header-wrapper">
             <div class="container">
                 <div>
