@@ -102,7 +102,7 @@ export default {
                     new modal(document.getElementById('successModal')).show()
                     const payload = {
                         status: response.status,
-                        description: response.data.message
+                        description:'Ma\'lumotlar yangilandi'
                     }
                     context.commit('updateResponse', payload)
                 }).catch(error => {
