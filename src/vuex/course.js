@@ -1,6 +1,5 @@
-import postRequest from "@/vuex/request/postRequest.js";
-import getRequest from "@/vuex/request/getRequest.js";
-import axios from "@/vuex/axios.js"
+import postRequest from "@/vuex/request/postRequest.js"
+import getRequest from "@/vuex/request/getRequest.js"
 
 export default {
     actions: {
@@ -28,7 +27,7 @@ export default {
             state.course = course
         },
         updateCourses(state, courses) {
-            state.courses = courses
+            state.courses.models = courses.data['hydra:member']
         },
         updateIsLoadingCourses(state, isLoading) {
             state.isLoading = isLoading

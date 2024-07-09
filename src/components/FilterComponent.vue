@@ -2,6 +2,7 @@
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import {mapActions, mapGetters} from "vuex"
+import {subDays} from 'date-fns'
 
 export default {
     components: {
@@ -54,7 +55,7 @@ export default {
             })
         },
         setNullDay() {
-            this.date = []
+            this.date = [null, null]
             this.startDateString = null
             this.endDateString = null
             this.selectedRange = 'All'
@@ -153,18 +154,18 @@ export default {
     },
     watch: {
         startDateString(value) {
-            this.date[0] = value ? this.parseDate(value) : null
+            this.date[0] = value ? this.parseDate(value) : subDays(new Date(), 30)
         },
         endDateString(value) {
-            this.date[1] = value ? this.parseDate(value) : null
+            this.date[1] = value ? this.parseDate(value) : new Date()
         },
         date(newDates) {
             if (newDates && newDates.length === 2 && newDates[0] !== null && newDates[1] !== null) {
                 this.startDateString = this.formatDate(newDates[0])
                 this.endDateString = this.formatDate(newDates[1])
             } else if (newDates === null) {
-                this.startDateString = ''
-                this.endDateString = ''
+                this.startDateString = null
+                this.endDateString = null
             }
         },
     },
@@ -203,13 +204,12 @@ export default {
                     :clearable="false"
                     :enable-time-picker="false"
                     :multi-calendars="{ solo: true }"
-
                     month-name-format="long"
                     range
                     @update:model-value="handleDateChange"
                 >
                     <template #dp-input="{ value }">
-                        <button v-if="(date[0] && date[1]) === null" class="select-date-btn" type="button">
+                        <button v-if="(startDateString  === null || startDateString  === undefined) && (endDateString === null ||endDateString ===  undefined)" class="select-date-btn" type="button">
                             <span>
                               <img alt="" class="mb-1" src="@/assets/images/calendar.svg"/>
                               <span class="ms-1">Sanani tanlang</span>

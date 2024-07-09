@@ -51,7 +51,8 @@ export default {
             }
             if (this.getUser.email !== userData.email) {
                 if (confirm("Elektron pochta manzilini almashtirishga aminmisiz ?")) {
-                    alert("Elektron pochta manzili o'zgartirildi!")
+                    localStorage.removeItem("accessToken")
+                    localStorage.removeItem("refreshToken")
                 } else {
                     userData.email = this.getUser.email
                 }
@@ -313,8 +314,8 @@ span {
 
 .clear-button {
     position: absolute;
-    top: 0;
-    right: 55px;
+    top: -10px;
+    right: 40px;
     border: none;
     outline: none !important;
     background: transparent;

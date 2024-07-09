@@ -267,7 +267,13 @@ export default {
                             <p>Sertifikat egasining kursni tomomlagan vaqtini kiriting</p>
                         </div>
                         <div class="col-12 col-md-8">
-                            <input v-model="form.courseFinishedDate" type="date" class="form-control">
+                            <input
+                                id="date-input-end"
+                                v-model="form.courseFinishedDate"
+                                v-mask-date
+                                class="form-control"
+                                placeholder="YYYY-OO-KK"
+                            />
                         </div>
                     </div>
                     <div class="row mt-4 justify-content-center">
@@ -441,8 +447,12 @@ form .costom-textarea {
 
 .clear-button {
     position: absolute;
-    top: 0;
-    right: 55px;
+    top: -10px;
+    right: 10px;
+    border: none;
+    outline: none !important;
+    background: transparent;
+    cursor: pointer;
 }
 
 @media (min-width: 992px) {

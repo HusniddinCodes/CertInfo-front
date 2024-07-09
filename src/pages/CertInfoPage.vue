@@ -10,6 +10,9 @@ export default {
         goBack() {
             this.$router.go(-1)
         },
+        setCertificate() {
+            return (new URLSearchParams(window.location.search)).get('certificate')
+        }
     },
     computed: {
         ...mapGetters(['getCertificate', 'getIsLoadingCertificates']),
@@ -18,7 +21,13 @@ export default {
         }
     },
     mounted() {
-        this.fetchCertificate(this.$route.params.certificateId)
+        this.certificate = this.setCertificate();
+        if (this.$route.path.startsWith('/admin')) {
+            this.fetchCertificate(this.$route.params.certificateId)
+        } else {
+            this.fetchCertificateScanQr(this.certificate);
+        }
+
     }
 }
 </script>
@@ -37,7 +46,6 @@ export default {
                 </div>
 
                 <div v-if="getCertificate.owner" class="profile d-sm-flex d-inline-block">
-                    <!--        if certified, add .certified class to avatar-->
                     <div class="avatar-container certified">
                         <div class="avatar">
                             <img :src="getCertificate.owner?.person?.avatar?.filePath ? `${this.$apiBaseMediaUrl}${getCertificate.owner.person.avatar.filePath}` : `${this.$apiBaseMediaUrl}${getCertificate.imgCertificate.filePath}`" alt="avatar">

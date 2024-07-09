@@ -43,14 +43,13 @@ export default {
         removeCertificate(id) {
             if (confirm('Sertifikatni o\'chirishni tasdiqlaysizmi ?')) {
                 this.deleteCertificate(id)
-                    .then(() => {
+                    .finally(() => {
                         this.fetchCertificates({
                             page: this.getCurrentCertificatePage,
                             search: this.search,
                             afterCourseFinishedDate: this.getAfterCourseFinishedDate,
                             beforeCourseFinishedDate: this.getBeforeCourseFinishedDate
                         })
-                        alert('Sertifikat muvaffaqiyatli o\'chirildi')
                     })
             }
         },

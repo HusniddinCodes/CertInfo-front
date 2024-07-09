@@ -97,7 +97,7 @@ export default {
 
                         </div>
                     </div>
-                    <button type="submit" :disabled="isSubmitDisabled" class="btn btn w-100 login-page-btn">Yangilash</button>
+                    <button type="submit" :class="{'disabled' : isSubmitDisabled}" class="btn btn w-100 login-page-btn">Yangilash</button>
                 </div>
             </div>
         </form>
@@ -113,5 +113,9 @@ form button {
 .login-page-btn {
     background-color: #7F56D9;
     color: white;
+}
+
+.btn.disabled {
+    background-color: #7F56D9;
 }
 </style>
